@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 620" width="1120" height="620" font-family="Inter, system-ui, sans-serif">
+  <defs>
+    <filter id="ts5" x="-50%" y="-50%" width="200%" height="200%">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="0.6" result="thick"/>
+      <feGaussianBlur in="thick" stdDeviation="2.2" result="blur"/>
+      <feFlood flood-color="#000000" flood-opacity="0.95" result="flood"/>
+      <feComposite in="flood" in2="blur" operator="in" result="shadow"/>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="aw5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#E2E8F0"/>
+    </marker>
+    <marker id="ar5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#F59E0B"/>
+    </marker>
+    <marker id="ag5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#34D399"/>
+    </marker>
+    <style><![CDATA[
+      .title { font-weight: 700; font-size: 30px; fill: #FFFFFF; letter-spacing: -0.5px; }
+      .mono  { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+      .nd    { font-size: 15px; fill: #FFFFFF; }
+      .js    { font-size: 12px; fill: #CBD5E1; }
+      .lbl   { font-size: 12px; fill: #94A3B8; }
+      .warn  { font-size: 13px; fill: #FCD34D; }
+      .ok    { font-size: 13px; fill: #6EE7B7; }
+      .hd3   { font-weight: 700; font-size: 14px; fill: #FFFFFF; }
+      .foot  { font-size: 14px; fill: #CBD5E1; }
+
+      .n { opacity: 0; transform: translateY(8px); animation: rise 0.45s cubic-bezier(.2,.8,.3,1) forwards; }
+      .n1{animation-delay:.15s} .n2{animation-delay:.45s} .n3{animation-delay:.75s} .n4{animation-delay:1.05s}
+      .e { opacity: 0; stroke-dasharray: 260; stroke-dashoffset: 260; animation: dr 0.5s ease forwards; }
+      .e1{animation-delay:.35s} .e2{animation-delay:.65s} .e3{animation-delay:.95s}
+      .lp { opacity: 0; stroke-dasharray: 900; stroke-dashoffset: 900; animation: dr 1s ease 1.35s forwards; }
+      .tri { opacity: 0; animation: f 0.5s ease 1.8s forwards; }
+      .ft { opacity: 0; animation: f 0.5s ease 2.1s forwards; }
+
+      @keyframes f { to { opacity: 1; } }
+      @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+      @keyframes dr { 0%{opacity:0} 100% { opacity: 1; stroke-dashoffset: 0; } }
+    
+      @media (prefers-reduced-motion: reduce) {
+        * { opacity: 1 !important; animation: none !important; transform: none !important; stroke-dashoffset: 0 !important; }
+      }
+    ]]></style>
+  </defs>
+
+  <text filter="url(#ts5)" class="title" x="560" y="46" text-anchor="middle">Bad output is a correction, never a restart</text>
+
+  <!-- agent -->
+  <g class="n n1">
+    <rect x="40" y="112" width="180" height="90" rx="12" fill="#0F172A" stroke="#38BDF8" stroke-width="2.2"/>
+    <text filter="url(#ts5)" class="nd mono" x="130" y="148" text-anchor="middle">builder</text>
+    <text filter="url(#ts5)" class="lbl mono" x="130" y="172" text-anchor="middle">pi session</text>
+    <text filter="url(#ts5)" class="lbl mono" x="130" y="190" text-anchor="middle">context intact</text>
+  </g>
+
+  <line class="e e1" x1="222" y1="157" x2="304" y2="157" stroke="#E2E8F0" stroke-width="2" marker-end="url(#aw5)"/>
+
+  <!-- envelope -->
+  <g class="n n2">
+    <rect x="308" y="98" width="290" height="118" rx="12" fill="#0F172A" stroke="#E2E8F0" stroke-width="1.8"/>
+    <text filter="url(#ts5)" class="lbl mono" x="324" y="120">final JSON response</text>
+    <text filter="url(#ts5)" class="js mono" x="324" y="144">{ "status": "success",</text>
+    <text filter="url(#ts5)" class="js mono" x="324" y="164">&#160;&#160;"artifacts": ["plan.md"],</text>
+    <text filter="url(#ts5)" class="js mono" x="324" y="184">&#160;&#160;"changed_files": ["server.ts"],</text>
+    <text filter="url(#ts5)" class="js mono" x="324" y="204">&#160;&#160;"commit_message": "feat: ..." }</text>
+  </g>
+
+  <line class="e e2" x1="600" y1="157" x2="682" y2="157" stroke="#E2E8F0" stroke-width="2" marker-end="url(#aw5)"/>
+  <text filter="url(#ts5)" class="lbl mono n n2" x="641" y="146" text-anchor="middle">parse</text>
+
+  <!-- gates -->
+  <g class="n n3">
+    <rect x="686" y="88" width="230" height="138" rx="12" fill="#0F172A" stroke="#F59E0B" stroke-width="2.2"/>
+    <text filter="url(#ts5)" class="nd mono" x="801" y="116" text-anchor="middle">gates</text>
+    <text filter="url(#ts5)" class="js mono" x="704" y="144">artifacts_exist</text>
+    <text filter="url(#ts5)" class="js mono" x="704" y="166">files_non_empty</text>
+    <text filter="url(#ts5)" class="js mono" x="704" y="188">diff_matches_claims</text>
+    <text filter="url(#ts5)" class="js mono" x="704" y="210">tests_pass("bun test")</text>
+  </g>
+
+  <line class="e e3" x1="918" y1="157" x2="1000" y2="157" stroke="#34D399" stroke-width="2" marker-end="url(#ag5)"/>
+  <g class="n n4">
+    <rect x="1004" y="128" width="86" height="58" rx="10" fill="#0F172A" stroke="#34D399" stroke-width="2"/>
+    <text filter="url(#ts5)" class="ok mono" x="1047" y="163" text-anchor="middle">next</text>
+  </g>
+
+  <!-- correction loop -->
+  <path class="lp" d="M801,228 L801,314 L130,314 L130,208" fill="none" stroke="#F59E0B" stroke-width="2" marker-end="url(#ar5)"/>
+  <text filter="url(#ts5)" class="warn mono n n3" x="466" y="276" text-anchor="middle">violations &#8594; re-prompt the SAME --session-id with corrections &#183; context intact &#183; bounded</text>
+
+  <!-- the synced triad -->
+  <g class="tri">
+    <text filter="url(#ts5)" class="hd3" x="40" y="368">The output contract is one thing in three places. Change one, change all three.</text>
+
+    <rect x="40" y="392" width="320" height="96" rx="11" fill="#0F172A" stroke="#38BDF8" stroke-width="1.8"/>
+    <text filter="url(#ts5)" class="nd mono" x="60" y="420">data_types.py</text>
+    <text filter="url(#ts5)" class="js mono" x="60" y="442">class BuildOutput(EnvelopeBase):</text>
+    <text filter="url(#ts5)" class="js mono" x="60" y="462">&#160;&#160;&#160;&#160;changed_files: list[str]</text>
+    <text filter="url(#ts5)" class="js mono" x="60" y="482">&#160;&#160;&#160;&#160;commit_message: str</text>
+
+    <rect x="400" y="392" width="320" height="96" rx="11" fill="#0F172A" stroke="#38BDF8" stroke-width="1.8"/>
+    <text filter="url(#ts5)" class="nd mono" x="420" y="420">builder/system.md</text>
+    <text filter="url(#ts5)" class="js mono" x="420" y="444">## Report</text>
+    <text filter="url(#ts5)" class="js mono" x="420" y="466">the same JSON, as an example</text>
+
+    <rect x="760" y="392" width="320" height="96" rx="11" fill="#0F172A" stroke="#38BDF8" stroke-width="1.8"/>
+    <text filter="url(#ts5)" class="nd mono" x="780" y="420">the ADW call site</text>
+    <text filter="url(#ts5)" class="js mono" x="780" y="444">ph.call(AgentCall(</text>
+    <text filter="url(#ts5)" class="js mono" x="780" y="466">&#160;&#160;output_type=BuildOutput, ...))</text>
+
+    <line x1="362" y1="440" x2="398" y2="440" stroke="#475569" stroke-width="2"/>
+    <line x1="722" y1="440" x2="758" y2="440" stroke="#475569" stroke-width="2"/>
+  </g>
+
+  <g class="ft">
+    <text filter="url(#ts5)" class="foot" x="40" y="540">Gates verify claims, never predictions. The envelope is a manifest of what the agent says it did, and code checks every line of it.</text>
+    <text filter="url(#ts5)" class="foot" x="40" y="568">What no predicate can check &#8212; plan quality, code taste &#8212; is not a gate's job. That is a reviewer agent, or you.</text>
+  </g>
+</svg>

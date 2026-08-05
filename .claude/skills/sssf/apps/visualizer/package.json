@@ -1,0 +1,29 @@
+{
+  "name": "sssf-visualizer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Read-only observability UI for the Super Simple Software Factory — polls sssf.db in a target repo.",
+  "scripts": {
+    "dev": "vite",
+    "server": "bun run server/index.ts",
+    "dev:all": "bun run server/index.ts & vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "bun run server/index.ts",
+    "typecheck": "vue-tsc --noEmit",
+    "lint": "oxlint ."
+  },
+  "dependencies": {
+    "@fontsource/play": "^5.3.0",
+    "lucide-vue-next": "^1.0.0",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.1.14",
+    "@vitejs/plugin-vue": "^6",
+    "oxlint": "^1",
+    "typescript": "^5.7.2",
+    "vite": "^7",
+    "vue-tsc": "^3"
+  }
+}

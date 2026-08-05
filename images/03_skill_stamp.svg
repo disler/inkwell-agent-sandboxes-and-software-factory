@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 580" width="1120" height="580" font-family="Inter, system-ui, sans-serif">
+  <defs>
+    <filter id="ts3" x="-50%" y="-50%" width="200%" height="200%">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="0.6" result="thick"/>
+      <feGaussianBlur in="thick" stdDeviation="2.2" result="blur"/>
+      <feFlood flood-color="#000000" flood-opacity="0.95" result="flood"/>
+      <feComposite in="flood" in2="blur" operator="in" result="shadow"/>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="aw3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#E2E8F0"/>
+    </marker>
+    <style><![CDATA[
+      .title { font-weight: 700; font-size: 30px; fill: #FFFFFF; letter-spacing: -0.5px; }
+      .mono  { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+      .hd    { font-weight: 700; font-size: 17px; fill: #FFFFFF; }
+      .row   { font-size: 13px; fill: #E2E8F0; }
+      .dim   { font-size: 12px; fill: #94A3B8; }
+      .tag   { font-size: 12px; fill: #38BDF8; }
+      .cmd   { font-size: 15px; fill: #FFFFFF; }
+      .note  { font-size: 14px; fill: #CBD5E1; }
+
+      .src   { opacity: 0; transform: translateX(-10px); animation: sl 0.5s cubic-bezier(.2,.8,.3,1) 0.15s forwards; }
+      .arrw  { opacity: 0; stroke-dasharray: 200; stroke-dashoffset: 200; animation: dr 0.6s ease 0.7s forwards; }
+      .cmdc  { opacity: 0; transform: scale(.92); transform-box: fill-box; transform-origin: center; animation: pop 0.5s cubic-bezier(.2,.9,.3,1.4) 0.85s forwards; }
+      .tgt   { opacity: 0; transform: translateX(10px); animation: sl2 0.5s cubic-bezier(.2,.8,.3,1) forwards; }
+      .t1{animation-delay:1.2s} .t2{animation-delay:1.4s} .t3{animation-delay:1.6s}
+      .nt    { opacity: 0; animation: f 0.5s ease 1.9s forwards; }
+
+      @keyframes f { to { opacity: 1; } }
+      @keyframes sl { to { opacity: 1; transform: translateX(0); } }
+      @keyframes sl2 { to { opacity: 1; transform: translateX(0); } }
+      @keyframes dr { 0%{opacity:0} 100% { opacity: 1; stroke-dashoffset: 0; } }
+      @keyframes pop { to { opacity: 1; transform: scale(1); } }
+    
+      @media (prefers-reduced-motion: reduce) {
+        * { opacity: 1 !important; animation: none !important; transform: none !important; stroke-dashoffset: 0 !important; }
+      }
+    ]]></style>
+  </defs>
+
+  <text filter="url(#ts3)" class="title" x="560" y="48" text-anchor="middle">One skill. Stamped into any repo.</text>
+
+  <!-- source: the skill -->
+  <g class="src">
+    <rect x="40" y="96" width="330" height="392" rx="14" fill="#0F172A" stroke="#38BDF8" stroke-width="2.2"/>
+    <text filter="url(#ts3)" class="hd mono" x="64" y="132">.claude/skills/sssf/</text>
+    <text filter="url(#ts3)" class="tag mono" x="64" y="154">THE PRODUCT</text>
+    <line x1="64" y1="170" x2="346" y2="170" stroke="#334155" stroke-width="1"/>
+    <text filter="url(#ts3)" class="row mono" x="64" y="198">SKILL.md</text>
+    <text filter="url(#ts3)" class="dim mono" x="200" y="198">rules + routing</text>
+    <text filter="url(#ts3)" class="row mono" x="64" y="228">cookbooks/</text>
+    <text filter="url(#ts3)" class="dim mono" x="200" y="228">8 playbooks</text>
+    <text filter="url(#ts3)" class="row mono" x="64" y="258">references/</text>
+    <text filter="url(#ts3)" class="dim mono" x="200" y="258">3 deep specs</text>
+    <text filter="url(#ts3)" class="row mono" x="64" y="288">scripts/</text>
+    <text filter="url(#ts3)" class="dim mono" x="200" y="288">install, make_*</text>
+    <text filter="url(#ts3)" class="row mono" x="64" y="318">templates/</text>
+    <text filter="url(#ts3)" class="dim mono" x="200" y="318">what gets stamped</text>
+    <line x1="64" y1="338" x2="346" y2="338" stroke="#334155" stroke-width="1"/>
+    <text filter="url(#ts3)" class="dim mono" x="64" y="366">6 starter ADWs</text>
+    <text filter="url(#ts3)" class="dim mono" x="64" y="392">13 adw_modules</text>
+    <text filter="url(#ts3)" class="dim mono" x="64" y="418">4 starter agents</text>
+    <text filter="url(#ts3)" class="dim mono" x="64" y="444">sssf.config.yaml</text>
+    <text filter="url(#ts3)" class="dim mono" x="64" y="470">.env.sample</text>
+  </g>
+
+  <!-- install arrow -->
+  <line class="arrw" x1="378" y1="292" x2="536" y2="292" stroke="#E2E8F0" stroke-width="2.2" marker-end="url(#aw3)"/>
+  <g class="cmdc">
+    <rect x="398" y="238" width="126" height="38" rx="9" fill="#0F172A" stroke="#E2E8F0" stroke-width="1.8"/>
+    <text filter="url(#ts3)" class="cmd mono" x="461" y="263" text-anchor="middle">/install</text>
+  </g>
+  <text filter="url(#ts3)" class="dim mono" x="461" y="326" text-anchor="middle">idempotent</text>
+
+  <!-- targets -->
+  <g class="tgt t1">
+    <rect x="560" y="96" width="520" height="118" rx="12" fill="#0F172A" stroke="#34D399" stroke-width="2"/>
+    <text filter="url(#ts3)" class="hd mono" x="584" y="130">your-api/</text>
+    <text filter="url(#ts3)" class="row mono" x="584" y="158">adws/adw_sssf_config/</text>
+    <text filter="url(#ts3)" class="dim mono" x="790" y="158">the agent roster</text>
+    <text filter="url(#ts3)" class="row mono" x="584" y="182">adws/adw_*.py</text>
+    <text filter="url(#ts3)" class="dim mono" x="790" y="182">workflows + modules</text>
+    <text filter="url(#ts3)" class="row mono" x="584" y="206">adws/adw_data/prompt_engineering/</text>
+  </g>
+  <g class="tgt t2">
+    <rect x="560" y="230" width="520" height="118" rx="12" fill="#0F172A" stroke="#34D399" stroke-width="2"/>
+    <text filter="url(#ts3)" class="hd mono" x="584" y="264">your-frontend/</text>
+    <text filter="url(#ts3)" class="row mono" x="584" y="292">adws/adw_sssf_config/</text>
+    <text filter="url(#ts3)" class="dim mono" x="790" y="292">different agents</text>
+    <text filter="url(#ts3)" class="row mono" x="584" y="316">adws/adw_*.py</text>
+    <text filter="url(#ts3)" class="dim mono" x="790" y="316">different chains</text>
+    <text filter="url(#ts3)" class="row mono" x="584" y="340">adws/adw_data/prompt_engineering/</text>
+  </g>
+  <g class="tgt t3">
+    <rect x="560" y="364" width="520" height="118" rx="12" fill="#0F172A" stroke="#34D399" stroke-width="2"/>
+    <text filter="url(#ts3)" class="hd mono" x="584" y="398">this-repo/</text>
+    <text filter="url(#ts3)" class="row mono" x="584" y="426">adws/adw_sssf_config/</text>
+    <text filter="url(#ts3)" class="dim mono" x="790" y="426">planner builder</text>
+    <text filter="url(#ts3)" class="row mono" x="584" y="450">adws/adw_*.py</text>
+    <text filter="url(#ts3)" class="dim mono" x="790" y="450">scout tester</text>
+    <text filter="url(#ts3)" class="row mono" x="584" y="474">adws/adw_data/prompt_engineering/</text>
+  </g>
+
+  <g class="nt">
+    <text filter="url(#ts3)" class="note" x="560" y="534" text-anchor="middle">The prompts are yours the moment they land. Edit them in the target repo, never back inside the skill.</text>
+  </g>
+</svg>

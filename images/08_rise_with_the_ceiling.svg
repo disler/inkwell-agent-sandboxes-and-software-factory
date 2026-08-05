@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600" font-family="Inter, system-ui, sans-serif">
+  <title>Rise with the ceiling: vibe coding sits inside a narrow band with a short arrow of headroom, while agentic engineering rises far above it with a tall one</title>
+  <defs>
+    <style><![CDATA[
+      .ttl   { opacity: 0; animation: f .6s ease .10s forwards; }
+
+      .vibe  { opacity: 0; animation: f .6s ease .55s forwards; }
+      /* The ceiling starts down beside vibe coding and RISES — the whole point
+         is that it was never a different kind of work, only a higher one. */
+      .ceil  { opacity: 0; transform: translateY(250px);
+               animation: f .5s ease .85s forwards, rise 1.15s cubic-bezier(.25,.9,.3,1) 1.25s forwards; }
+
+      .band  { opacity: 0; animation: fb .5s ease 2.45s forwards; }
+
+      /* Arrows grow from their base, so each reads as headroom being measured. */
+      .stem  { transform: scaleY(0); transform-box: fill-box; transform-origin: bottom;
+               animation: grow .55s cubic-bezier(.3,.8,.3,1) forwards; }
+      .head  { opacity: 0; animation: f .3s ease forwards; }
+      .aS    { animation-delay: 2.75s } .hS { animation-delay: 3.20s }
+      .aL    { animation-delay: 3.10s } .hL { animation-delay: 3.75s }
+
+      .glow  { animation: gl 3s ease-in-out 4s infinite; }
+
+      @keyframes f     { to { opacity: 1 } }
+      @keyframes fb    { to { opacity: .55 } }
+      @keyframes rise  { to { transform: translateY(0) } }
+      @keyframes grow  { to { transform: scaleY(1) } }
+      @keyframes gl    { 0%,100% { filter: drop-shadow(0 0 2px rgba(240,86,31,.25)) }
+                         50%     { filter: drop-shadow(0 0 12px rgba(240,86,31,.65)) } }
+
+      @media (prefers-reduced-motion: reduce) {
+        * { opacity: 1 !important; animation: none !important; transform: none !important; }
+        .band { opacity: .55 !important; }
+      }
+    ]]></style>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="600" rx="14" fill="#0B0F14" stroke="#1B2431" stroke-width="1"/>
+
+  <text class="ttl" x="600" y="72" font-size="30" font-weight="800" letter-spacing="2.4"
+        fill="#FFFFFF" text-anchor="middle">RISE WITH THE CEILING</text>
+
+  <!-- the band vibe coding is stuck inside -->
+  <g class="band" stroke="#4A5462" stroke-width="1.4" stroke-dasharray="7 6">
+    <line x1="260" y1="412" x2="940" y2="412"/>
+    <line x1="260" y1="498" x2="940" y2="498"/>
+  </g>
+
+  <!-- vibe coding: the floor, and a short arrow of headroom above it -->
+  <g class="vibe">
+    <line x1="260" y1="452" x2="940" y2="452" stroke="#FFFFFF" stroke-width="3.4"/>
+    <text x="938" y="484" font-size="20" font-weight="700" letter-spacing="1.8"
+          fill="#E8ECF2" text-anchor="end">VIBE CODING</text>
+  </g>
+  <line class="stem aS" x1="222" y1="498" x2="222" y2="440" stroke="#FFFFFF" stroke-width="2"/>
+  <path class="head hS" d="M222 428 L216 442 L228 442 Z" fill="#FFFFFF"/>
+
+  <!-- agentic engineering: the ceiling, and how much further it goes -->
+  <!-- .ceil animates opacity+transform, .glow animates filter — they must sit on
+       DIFFERENT elements, or the second `animation` shorthand wipes the first. -->
+  <g class="ceil">
+    <g class="glow">
+      <line x1="260" y1="188" x2="940" y2="188" stroke="#F0561F" stroke-width="3.4"/>
+      <text x="938" y="170" font-size="20" font-weight="700" letter-spacing="1.8"
+            fill="#F0561F" text-anchor="end">AGENTIC ENGINEERING</text>
+    </g>
+  </g>
+  <line class="stem aL" x1="150" y1="412" x2="150" y2="200" stroke="#F0561F" stroke-width="2"/>
+  <path class="head hL" d="M150 186 L143 202 L157 202 Z" fill="#F0561F"/>
+</svg>

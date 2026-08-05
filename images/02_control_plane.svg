@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 600" width="1100" height="600" font-family="Inter, system-ui, sans-serif">
+  <defs>
+    <filter id="ts2" x="-50%" y="-50%" width="200%" height="200%">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="0.6" result="thick"/>
+      <feGaussianBlur in="thick" stdDeviation="2.2" result="blur"/>
+      <feFlood flood-color="#000000" flood-opacity="0.95" result="flood"/>
+      <feComposite in="flood" in2="blur" operator="in" result="shadow"/>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#EF4444"/>
+    </marker>
+    <marker id="aw2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#E2E8F0"/>
+    </marker>
+    <style><![CDATA[
+      .title { font-weight: 700; font-size: 30px; fill: #FFFFFF; letter-spacing: -0.5px; }
+      .panel { font-weight: 700; font-size: 19px; fill: #FFFFFF; }
+      .mono  { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+      .node  { font-size: 15px; fill: #FFFFFF; }
+      .small { font-size: 13px; fill: #CBD5E1; }
+      .bad   { font-size: 13px; fill: #FCA5A5; }
+      .good  { font-size: 13px; fill: #6EE7B7; }
+      .verdict { font-size: 14px; font-weight: 700; fill: #FFFFFF; }
+
+      .pL { opacity: 0; animation: f 0.5s ease 0.15s forwards; }
+      .pR { opacity: 0; animation: f 0.5s ease 0.75s forwards; }
+      .loop { opacity: 0; stroke-dasharray: 520; stroke-dashoffset: 520; animation: dr 0.8s ease 0.5s forwards; }
+      .spin { animation: wob 3s ease-in-out 1.2s infinite; transform-box: fill-box; transform-origin: center; }
+      .rail2 { opacity: 0; stroke-dasharray: 460; stroke-dashoffset: 460; animation: dr 0.9s ease 1.0s forwards; }
+      .rn { opacity: 0; transform: translateY(8px); animation: rise 0.4s ease forwards; }
+      .r1{animation-delay:1.25s} .r2{animation-delay:1.45s} .r3{animation-delay:1.65s} .r4{animation-delay:1.85s}
+      .vd { opacity: 0; animation: f 0.6s ease 2.2s forwards; }
+
+      @keyframes f { to { opacity: 1; } }
+      @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+      @keyframes dr { 0%{opacity:0} 100% { opacity: .9; stroke-dashoffset: 0; } }
+      @keyframes wob { 0%,100%{ transform: rotate(0deg);} 50%{ transform: rotate(4deg);} }
+    
+      @media (prefers-reduced-motion: reduce) {
+        * { opacity: 1 !important; animation: none !important; transform: none !important; stroke-dashoffset: 0 !important; }
+      }
+    ]]></style>
+  </defs>
+
+  <text filter="url(#ts2)" class="title" x="550" y="50" text-anchor="middle">Where does the control plane live?</text>
+
+  <!-- LEFT: agent owns the loop -->
+  <g class="pL">
+    <rect x="50" y="90" width="470" height="420" rx="16" fill="none" stroke="#EF4444" stroke-width="1.4" stroke-dasharray="7 6" opacity="0.6"/>
+    <text filter="url(#ts2)" class="panel" x="285" y="128" text-anchor="middle">The agent owns the loop</text>
+    <text filter="url(#ts2)" class="small mono" x="285" y="184" text-anchor="middle">prompt &#8594; hope</text>
+
+    <g class="spin">
+      <rect x="185" y="200" width="200" height="96" rx="14" fill="#0F172A" stroke="#EF4444" stroke-width="2.2"/>
+    </g>
+    <text filter="url(#ts2)" class="node mono" x="285" y="244" text-anchor="middle">one big agent</text>
+    <text filter="url(#ts2)" class="small mono" x="285" y="270" text-anchor="middle">plans, builds, tests,</text>
+    <text filter="url(#ts2)" class="small mono" x="285" y="288" text-anchor="middle">and grades itself</text>
+  </g>
+  <path class="loop" d="M185,248 C120,248 120,150 285,150 C450,150 450,248 385,248" fill="none" stroke="#EF4444" stroke-width="2" marker-end="url(#ar)"/>
+
+  <g class="pL">
+    <text filter="url(#ts2)" class="bad mono" x="90" y="352">&#10007;  no phase boundary</text>
+    <text filter="url(#ts2)" class="bad mono" x="90" y="382">&#10007;  no acceptance you can name</text>
+    <text filter="url(#ts2)" class="bad mono" x="90" y="412">&#10007;  a retry is a fresh cold start</text>
+    <text filter="url(#ts2)" class="bad mono" x="90" y="442">&#10007;  the only trace is the transcript</text>
+    <text filter="url(#ts2)" class="bad mono" x="90" y="472">&#10007;  run it twice, get two systems</text>
+  </g>
+
+  <!-- RIGHT: code owns the loop -->
+  <g class="pR">
+    <rect x="580" y="90" width="470" height="420" rx="16" fill="none" stroke="#34D399" stroke-width="1.4" stroke-dasharray="7 6" opacity="0.6"/>
+    <text filter="url(#ts2)" class="panel" x="815" y="128" text-anchor="middle">Code owns the loop</text>
+    <text filter="url(#ts2)" class="small mono" x="815" y="152" text-anchor="middle">agents are bounded nodes in a graph</text>
+  </g>
+
+  <line class="rail2" x1="610" y1="248" x2="1020" y2="248" stroke="#475569" stroke-width="9" stroke-linecap="round"/>
+  <g class="rn r1">
+    <rect x="612" y="212" width="92" height="72" rx="10" fill="#0F172A" stroke="#38BDF8" stroke-width="2"/>
+    <text filter="url(#ts2)" class="small mono" x="658" y="244" text-anchor="middle">planner</text>
+    <text filter="url(#ts2)" class="good mono" x="658" y="266" text-anchor="middle">&#10003; gates</text>
+  </g>
+  <g class="rn r2">
+    <rect x="716" y="212" width="92" height="72" rx="10" fill="#0F172A" stroke="#34D399" stroke-width="2"/>
+    <text filter="url(#ts2)" class="small mono" x="762" y="244" text-anchor="middle">git</text>
+    <text filter="url(#ts2)" class="good mono" x="762" y="266" text-anchor="middle">code</text>
+  </g>
+  <g class="rn r3">
+    <rect x="820" y="212" width="92" height="72" rx="10" fill="#0F172A" stroke="#38BDF8" stroke-width="2"/>
+    <text filter="url(#ts2)" class="small mono" x="866" y="244" text-anchor="middle">builder</text>
+    <text filter="url(#ts2)" class="good mono" x="866" y="266" text-anchor="middle">&#10003; gates</text>
+  </g>
+  <g class="rn r4">
+    <rect x="924" y="212" width="92" height="72" rx="10" fill="#0F172A" stroke="#38BDF8" stroke-width="2"/>
+    <text filter="url(#ts2)" class="small mono" x="970" y="244" text-anchor="middle">tester</text>
+    <text filter="url(#ts2)" class="good mono" x="970" y="266" text-anchor="middle">&#10003; gates</text>
+  </g>
+
+  <g class="pR">
+    <text filter="url(#ts2)" class="good mono" x="620" y="352">&#10003;  every phase named and owned</text>
+    <text filter="url(#ts2)" class="good mono" x="620" y="382">&#10003;  a typed envelope crosses each edge</text>
+    <text filter="url(#ts2)" class="good mono" x="620" y="412">&#10003;  a retry resumes the same session</text>
+    <text filter="url(#ts2)" class="good mono" x="620" y="442">&#10003;  every event lands in sqlite</text>
+    <text filter="url(#ts2)" class="good mono" x="620" y="472">&#10003;  run it twice, get the same shape</text>
+  </g>
+
+  <g class="vd">
+    <text filter="url(#ts2)" class="verdict" x="550" y="556" text-anchor="middle">Same models. Same prompts. The difference is who owns sequencing, retries, and acceptance.</text>
+  </g>
+</svg>

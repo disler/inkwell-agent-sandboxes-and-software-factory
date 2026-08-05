@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan: Sandbox Mount System</title>
+<style>
+  :root{
+    --bg:#0A0E1A; --panel:#111726; --ink:#F5F5F0; --muted:#9AA4B2;
+    --cyan:#22D3EE; --amber:#F59E0B; --red:#EF4444; --line:#1E2A3C;
+    --green:#34D399; --violet:#A78BFA;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font:16px/1.65 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+  .wrap{max-width:980px;margin:0 auto;padding:48px 24px 96px}
+  header.hero{text-align:center;margin-bottom:36px}
+  header.hero h1{font-size:2.2rem;margin:0 0 10px;letter-spacing:-.02em}
+  .meta{color:var(--muted);font-size:.9rem}
+  .badge{display:inline-block;background:var(--cyan);color:#001018;border-radius:999px;
+         padding:2px 11px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+          padding:24px 28px;margin:20px 0}
+  section>h2{margin:0 0 14px;color:var(--cyan);font-size:1.3rem;
+             border-bottom:1px solid var(--line);padding-bottom:10px}
+  h3{color:var(--amber);font-size:1.02rem;margin:22px 0 8px}
+  figure{margin:18px 0 0}
+  figure img{width:100%;display:block;border:1px solid var(--line);border-radius:10px}
+  figcaption{color:var(--muted);font-size:.8rem;margin-top:6px;text-align:center}
+  ul,ol{padding-left:22px}
+  li{margin:4px 0}
+  table{width:100%;border-collapse:collapse;margin:12px 0}
+  th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}
+  th{background:#0d1422;color:var(--cyan)}
+  pre{background:#0d1422;border:1px solid var(--line);border-radius:8px;padding:14px;overflow:auto}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.86em}
+  :not(pre)>code{background:#0d1422;border:1px solid var(--line);border-radius:6px;
+                 padding:2px 6px;color:var(--amber)}
+  .freeform{border-style:dashed;border-color:var(--cyan)}
+  .freeform>h2::after{content:" · author anything that helps";color:var(--muted);
+                      font-size:.7rem;font-weight:400;text-transform:none}
+  a{color:var(--cyan)}
+  aside{border-left:3px solid var(--amber);background:#1a1408;padding:10px 14px;
+        margin:14px 0;border-radius:0 8px 8px 0;font-size:.93rem}
+  aside.danger{border-left-color:var(--red);background:#1c0d0d}
+  aside.good{border-left-color:var(--green);background:#08170f}
+  mark{background:var(--amber);color:#1a1200;padding:0 4px;border-radius:3px}
+  dl{margin:12px 0}
+  dt{color:var(--violet);font-family:ui-monospace,monospace;font-size:.88rem;margin-top:10px;font-weight:700}
+  dd{margin:2px 0 0 18px;color:var(--muted);font-size:.92rem}
+  details{background:#0d1422;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0}
+  summary{cursor:pointer;color:var(--cyan);font-weight:600}
+  .lane{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:720px){.lane{grid-template-columns:1fr}}
+  .card{background:#0d1422;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .card h4{margin:0 0 8px;font-size:.9rem;letter-spacing:.03em;text-transform:uppercase}
+  .out h4{color:var(--amber)} .in h4{color:var(--green)}
+  .pill{display:inline-block;font-size:.7rem;padding:1px 8px;border-radius:999px;
+        border:1px solid var(--line);color:var(--muted);margin-left:6px}
+  samp{color:var(--green);font-family:ui-monospace,monospace}
+  kbd{background:#0d1422;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;
+      padding:1px 6px;font-family:ui-monospace,monospace;font-size:.85em}
+  .ck{display:flex;gap:10px;align-items:flex-start;padding:5px 8px;border-radius:7px;
+      cursor:pointer;line-height:1.5}
+  .ck:hover{background:#0d1422}
+  .ck input{margin:4px 0 0;accent-color:var(--cyan);flex:0 0 auto;width:15px;height:15px;cursor:pointer}
+  .ck.done>span{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line)}
+  .cklist{margin:10px 0}
+  .prog{position:sticky;top:0;z-index:20;background:rgba(10,14,26,.94);backdrop-filter:blur(6px);
+        border:1px solid var(--line);border-radius:10px;padding:9px 14px;margin:0 0 18px;
+        display:flex;align-items:center;gap:12px;font-size:.84rem}
+  .prog .bar{flex:1;height:7px;background:#0d1422;border-radius:99px;overflow:hidden}
+  .prog .bar i{display:block;height:100%;width:0;background:var(--cyan);transition:width .25s}
+  .prog button{background:#0d1422;color:var(--muted);border:1px solid var(--line);
+               border-radius:6px;padding:3px 9px;font-size:.74rem;cursor:pointer}
+  .prog button:hover{color:var(--ink)}
+  .phase{border-left:3px solid var(--cyan);padding-left:14px;margin:26px 0}
+  .phase h3{margin-top:0}
+  .gate{background:#0d1422;border:1px solid var(--line);border-left:3px solid var(--green);
+        border-radius:0 8px 8px 0;padding:9px 14px;margin:10px 0;font-size:.92rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="prog">
+    <strong id="ckcount">0 / 0</strong>
+    <div class="bar"><i id="ckbar"></i></div>
+    <button onclick="ckReset()">reset</button>
+  </div>
+
+  <header class="hero">
+    <h1>Plan: Sandbox Mount System</h1>
+    <p class="meta"><span class="badge">feature</span> &middot; complex &middot; measured on live VMs 2026-08-04</p>
+    <figure>
+      <img src="sandbox-mount-system/00-hero.png" alt="One-glance overview of the sandbox mount system">
+      <figcaption>One-glance overview: host orchestration drives six phases into a sandbox that runs the factory</figcaption>
+    </figure>
+  </header>
+
+  <section>
+    <h2>Where this stands <span class="pill">2026-08-04</span></h2>
+    <p><strong>Built and working:</strong> all six phases exist; five ran on live hardware. A real
+    SDLC completed inside a sandbox (5/5 phases, 902k tokens, <samp>$0.528</samp>, commit
+    <code>bcfc678</code>). Command surface is namespaced into <code>sbx</code> / <code>adw</code> /
+    <code>local</code> / <code>obs</code>. The orchestrator skill and five prompts are authored.</p>
+    <aside class="danger"><strong>Not yet proven, and the claim matters:</strong> the verified
+    end-to-end run happened on a VM where the strip had been <em>accidentally undone</em> by a
+    <code>git checkout -- .</code>. The strip has since been fixed (<code>mod?</code>, and
+    <code>mount</code> relocated into the stripped directory) and confirmed in isolation, but a
+    clean full mount with the strip genuinely in place has <mark>not</mark> been run.
+    <strong>TEARDOWN has never been executed at all.</strong></aside>
+    <h3>Outstanding</h3>
+    <ul>
+      <li><strong>Clean e2e re-run</strong> with the strip in place — the headline claim depends on it.</li>
+      <li><strong>Teardown unexercised.</strong> It is also the only thing that rescues a sandbox's commits (via <code>git bundle</code>) and records <code>spend</code>.</li>
+      <li><strong>Vocabulary collision:</strong> a sandbox hosts many ADW runs, but the sandbox record calls itself <code>run_id</code> and duplicates it as <code>vm_name</code>. Rename to a single <code>sandbox</code> field is agreed in principle, not done.</li>
+      <li><strong><code>just sbx execute</code> cannot vary the roster</strong> — hardcoded to the module default, and <code>ssh vm "cmd"</code> carries no environment. Best-of-N cannot actually vary models until this is fixed.</li>
+      <li><strong>Gate C reads <code>SSSF_CONFIG</code> inside the sandbox</strong>, where nothing sets it, so it always pings the default roster.</li>
+      <li><strong>Naming asymmetry:</strong> <code>just local cc</code> vs <code>just sbx orchestrate</code> — same action, two conventions.</li>
+      <li><code>exedev vm snapshot</code> still lacks <code>sync</code> before <code>cp</code>; the golden-VM path is unexercised.</li>
+      <li>Skill cookbooks still document the pre-namespace flat commands.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Task Description</h2>
+    <p>Build the <strong>rebootable mount system</strong> that stands up Inkwell plus the Super Simple
+    Software Factory on a throwaway exe.dev VM, runs work inside it, and lets us watch from outside
+    without reaching in.</p>
+    <p>The system is split into <mark>two layers that must never mix</mark>:</p>
+    <div class="lane">
+      <div class="card out">
+        <h4>Out-sandbox · orchestration <span class="pill">host only</span></h4>
+        <p><code>just/sandbox/*.just</code> — six phase recipes that run on <em>your machine</em> and
+        drive the exe.dev control plane. Stripped out of the mounted copy so a sandbox can never
+        mount sandboxes.</p>
+      </div>
+      <div class="card in">
+        <h4>In-sandbox · execution <span class="pill">inside the VM</span></h4>
+        <p><code>just/adws.just</code> mounted as <code>mod adw</code> — the ADW workflows. This is
+        what <em>execute</em> kicks off. It survives the strip and ships with the repo.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Objective</h2>
+    <ul>
+      <li><code>just mount RUN_ID</code> takes a blank VM to a health-checked, running factory in
+      <strong>~10s</strong>, and stops at observe. It <mark>never tears down</mark>.</li>
+      <li><code>just adw &lt;name&gt; "..."</code> runs any ADW inside the sandbox.</li>
+      <li>Three ways to drive a mounted sandbox: a generic command, the default full SDLC, and a
+      <strong>persistent resumable agent session</strong> we can keep talking to.</li>
+      <li><code>just teardown RUN_ID</code> is always an explicit, separate decision.</li>
+      <li>Getting one sandbox right makes N free: N is a loop over the same six phases.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Problem Statement</h2>
+    <p>The factory has no home. It runs on the same laptop we work on, which caps us at one agent:
+    five agents fight over one working directory, one dev server port, and one git state. Isolation
+    is the mechanical blocker. Being forced out of the loop is the strategic one — a system that
+    needs a human at every step does not scale, and that human becomes the key-man risk.</p>
+    <p>Everything below is grounded in measurements taken on real VMs, not inference. Several
+    "obvious" designs were killed by those measurements:</p>
+    <table>
+      <tr><th>Assumption</th><th>Measured reality</th></tr>
+      <tr><td>Dependency install is slow, so bake a Docker image</td>
+          <td><strong>False.</strong> bun 1s, just 0s, <code>bun install</code> 0.4s, cold <code>uv</code> resolve 3s. A custom image buys ~1s.</td></tr>
+      <tr><td>Use <code>--setup-script</code> to self-configure</td>
+          <td><strong>Wrong tool.</strong> 10KiB cap, async, and it <em>cannot see</em> <code>--env</code>, so it can never receive the runtime key.</td></tr>
+      <tr><td>Pass secrets with <code>--env</code></td>
+          <td><strong>Invisible.</strong> Lands in <code>/etc/profile.d/exe-env.sh</code>; not present for <code>ssh vm "cmd"</code>.</td></tr>
+      <tr><td>Golden VM via <code>cp</code> is a free speedup</td>
+          <td><strong>Silently corrupts.</strong> Unsynced clone produced <mark>5,641 zero-byte files</mark> and reported success.</td></tr>
+      <tr><td>Need the GitHub integration to clone</td>
+          <td><strong>Not for a public repo.</strong> Plain <code>git clone</code>, zero auth.</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Solution Approach</h2>
+    <figure><img src="sandbox-mount-system/01-solution-approach.png" alt="Two-layer split: out-sandbox orchestration and in-sandbox execution"></figure>
+    <p>One repo, two layers, one boundary. The boundary is the <strong>strip manifest</strong>: at
+    setup time the sandbox deletes the orchestration layer from its own copy. The rule for which
+    layer a file belongs to is simply <em>what credential does it need?</em></p>
+    <table>
+      <tr><th></th><th>Out-sandbox (orchestration)</th><th>In-sandbox (execution)</th></tr>
+      <tr><th>Lives in</th><td><code>just/sandbox/*.just</code>, <code>sandbox_mount/host/setup_sandbox.py</code></td><td><code>just/adws.just</code>, <code>adws/</code>, <code>sandbox_mount/guest/provision.sh</code></td></tr>
+      <tr><th>Runs on</th><td>your machine</td><td>the VM</td></tr>
+      <tr><th>Credential</th><td>exe.dev account + OpenRouter provisioning key</td><td>disposable runtime key only</td></tr>
+      <tr><th>Entry point</th><td><code>just mount</code>, <code>just execute</code>, <code>just teardown</code></td><td><code>just adw sdlc "..."</code></td></tr>
+      <tr><th>After strip</th><td><mark>deleted</mark></td><td>survives</td></tr>
+    </table>
+    <p>Files come in via <code>git clone</code> against the public repo. That single choice removes
+    rsync, the exclude list, <code>.git</code> special-casing, and the GitHub integration, while
+    adding a commit-SHA pin that makes N runs comparable.</p>
+  </section>
+
+  <section>
+    <h2>Relevant Files</h2>
+    <h3>New files</h3>
+    <dl>
+      <dt>just/adws.just</dt><dd>In-sandbox execution layer. All ADW recipes, mounted as <code>mod adw</code>. <mark>Needs its own <code>config :=</code> and <code>set working-directory := '..'</code></mark> (see Freeform).</dd>
+      <dt>just/sandbox/create.just</dt><dd>Phase 1. Mint runtime key, <code>exe.dev new</code>, seed the run record.</dd>
+      <dt>just/sandbox/fill.just</dt><dd>Phase 2. <code>git clone</code> the public repo, pin SHA, write <code>.env</code>.</dd>
+      <dt>just/sandbox/setup.just</dt><dd>Phase 3. Run <code>provision.sh</code>, then the three-assertion health gate.</dd>
+      <dt>just/sandbox/execute.just</dt><dd>Phase 4. <code>run</code> / <code>execute</code> / <code>agent</code>.</dd>
+      <dt>just/sandbox/observe.just</dt><dd>Phase 5. Port mapping, VM token, print URLs.</dd>
+      <dt>just/sandbox/teardown.just</dt><dd>Phase 6. Pull artifacts, revoke key, destroy. Plus <code>reap</code>.</dd>
+      <dt>sandbox_mount/guest/provision.sh</dt><dd>Runs <em>inside</em>. Strip, install, configure, warm, sentinel. Survives its own strip.</dd>
+      <dt>sandbox_mount/strip_manifest.txt</dt><dd>Declarative host-only paths. Deleted from the mounted copy.</dd>
+      <dt>sandbox_mount/guest/models.json.tmpl</dt><dd>The pi model registry: one <code>openrouter</code> provider block with all nine roster ids.</dd>
+      <dt>.sandbox/runs/&lt;run-id&gt;.json</dt><dd>Run record. Gitignored. The only state shared across phases.</dd>
+    </dl>
+    <h3>Modified files</h3>
+    <dl>
+      <dt>justfile</dt><dd>ADW recipes move out to the module; add <code>mod adw</code>, six <code>import</code>s, and the <code>mount</code> chain.</dd>
+      <dt>.gitignore</dt><dd>Add <code>.sandbox/</code>.</dd>
+      <dt>.claude/skills/sandbox-exe-dev/exedev_cli/src/commands/vm.py</dt><dd><code>sync</code> the source VM before <code>cp</code>.</dd>
+    </dl>
+  </section>
+
+  <section>
+    <h2>Implementation Phases</h2>
+    <figure><img src="sandbox-mount-system/02-phases.png" alt="Implementation phases"></figure>
+    <p>The six runtime phases below are both the <strong>spec</strong> and the <strong>working
+    checklist</strong>. Check boxes as we build; state persists in your browser. Every measured number
+    and every gotcha is inline where it bites.</p>
+
+    <h3>Build Phase 1 &mdash; Foundation (no VMs involved)</h3>
+    <div class="cklist">
+    <label class="ck"><input type="checkbox" data-ck="f1" checked><span>Create <code>just/adws.just</code>; move the 10 ADW recipes; add <code>set working-directory := '..'</code> and a local <code>config :=</code></span></label>
+    <label class="ck"><input type="checkbox" data-ck="f2" checked><span>Wire <code>mod adw 'just/adws.just'</code> in the root justfile; verify <code>just adw --list</code></span></label>
+    <label class="ck"><input type="checkbox" data-ck="f3" checked><span>Add the 3 missing ADWs: <code>build</code>, <code>quality</code>, <code>plan-build-test-quality</code></span></label>
+    <label class="ck"><input type="checkbox" data-ck="f4" checked><span>Run-record helper (create / read field / set field / close) + <code>.sandbox/</code> in <code>.gitignore</code></span></label>
+    <label class="ck"><input type="checkbox" data-ck="f5" checked><span><code>sandbox_mount/strip_manifest.txt</code> &mdash; three whole directories, no file-level exceptions</span></label>
+    <label class="ck"><input type="checkbox" data-ck="f6" checked><span><code>sandbox_mount/guest/provision.sh</code></span></label>
+    </div>
+
+    <h3>Build Phase 2 &mdash; The six runtime phases</h3>
+
+    <div class="phase">
+      <h3>1. CREATE <span class="pill">host &middot; control plane &middot; 1.9s</span></h3>
+      <p><strong>Strict order. Every failure path calls <code>just teardown &lt;run-id&gt;</code>.</strong></p>
+      <div class="cklist">
+    <label class="ck"><input type="checkbox" data-ck="c1" checked><span>Generate a unique run id <code>&lt;task&gt;-&lt;YYYYMMDD&gt;-&lt;short-uuid&gt;</code> &mdash; the uuid suffix is <strong>not optional</strong></span></label>
+    <label class="ck"><input type="checkbox" data-ck="c2" checked><span>Write the run record first, with <code>run_id</code> only</span></label>
+    <label class="ck"><input type="checkbox" data-ck="c3" checked><span><code>ssh exe.dev new --name &lt;run-id&gt; --tag inkwell --json</code> &rarr; record <code>vm_name</code>, <code>https_url</code></span></label>
+    <label class="ck"><input type="checkbox" data-ck="c4" checked><span>Mint the OpenRouter key, <code>limit</code> default <strong>50.00</strong>, name <code>sbx-&lt;run-id&gt;</code> &rarr; record <code>key_hash</code>, <code>limit</code></span></label>
+    <label class="ck"><input type="checkbox" data-ck="c5" checked><span>Wait for SSH to answer</span></label>
+      </div>
+      <div class="gate"><strong>Gate:</strong> SSH responds. <strong>Must not:</strong> put code or secrets on the box &mdash; the key is minted here but injected in FILL.</div>
+<pre><code class="language-bash"># adjustable per run: just create my-run --limit 200
+curl -s https://openrouter.ai/api/v1/keys \
+  -H "Authorization: Bearer $OPENROUTER_PROVISIONING_KEY" \
+  -H "Content-Type: application/json" \
+  -d "{\"name\": \"sbx-$RUN_ID\", \"limit\": ${LIMIT:-50.00}}"
+# -> { "key": "sk-or-v1-...", "hash": "..." }</code></pre>
+      <aside><strong>Why record &rarr; VM &rarr; key:</strong> a crash between any two steps must leave
+      something teardown can find. Record first means teardown always has a handle. VM before key means
+      a mint failure orphans a VM (cheap, visible in <code>vm list</code>) rather than a key orphaning
+      spend (invisible). <strong>Teardown must be idempotent.</strong></aside>
+      <aside class="danger">The <code>sbx-</code> prefix is <mark>load-bearing</mark> &mdash; it is how
+      <code>reap</code> tells our keys from your personal ones. Verified: your four personal keys carry
+      no such prefix. Never mint a managed key without it.</aside>
+    </div>
+
+    <div class="phase">
+      <h3>2. FILL <span class="pill">host-triggered &middot; runs inside &middot; 2.6s</span></h3>
+      <div class="cklist">
+    <label class="ck"><input type="checkbox" data-ck="fi1" checked><span><code>ssh &lt;vm&gt; 'git clone https://github.com/disler/inkwell-agent-sandboxes-and-software-factory.git app'</code></span></label>
+    <label class="ck"><input type="checkbox" data-ck="fi2" checked><span>Optionally <code>git checkout &lt;sha&gt;</code> to pin the run</span></label>
+    <label class="ck"><input type="checkbox" data-ck="fi3" checked><span>Write <code>.env</code> into <code>app/</code> with the minted runtime key</span></label>
+      </div>
+      <div class="gate"><strong>Gate:</strong> checked-out SHA equals the intended SHA.</div>
+      <aside class="good"><strong>Public repo, no auth, no GitHub integration.</strong> Measured at
+      <strong>2.61s</strong> for 216 files. The clone brings <code>.git</code> with it, which SSSF needs
+      because its workflows commit their own output.</aside>
+      <aside><code>.env</code> is written <strong>here, not at create</strong> &mdash; it lives inside the
+      repo dir, which does not exist until the clone lands. <code>--env</code> cannot carry it.</aside>
+    </div>
+
+    <div class="phase">
+      <h3>3. SETUP <span class="pill">inside &middot; ~5s</span></h3>
+      <p><code>ssh &lt;vm&gt; 'bash app/sandbox_mount/guest/provision.sh'</code>, which does in order:</p>
+      <div class="cklist">
+    <label class="ck"><input type="checkbox" data-ck="s1" checked><span>Strip orchestration per <code>sandbox_mount/strip_manifest.txt</code> (the sandbox de-nests itself)</span></label>
+    <label class="ck"><input type="checkbox" data-ck="s2" checked><span>Install <code>bun</code> (~1s) and <code>just</code> (~0s) from CDNs &mdash; <strong>never <code>apt</code></strong></span></label>
+    <label class="ck"><input type="checkbox" data-ck="s3" checked><span>Write <code>~/.pi/agent/models.json</code> &mdash; one <code>openrouter</code> provider block, all roster ids, <strong>each with a full 4-field <code>cost</code> block</strong></span></label>
+    <label class="ck"><input type="checkbox" data-ck="s4" checked><span><code>bun install</code> in <code>apps/inkwell</code> and the visualizer (~0.4s)</span></label>
+    <label class="ck"><input type="checkbox" data-ck="s5" checked><span><code>bunx vite build</code> in the visualizer so its server can serve the UI from <code>dist/</code></span></label>
+    <label class="ck"><input type="checkbox" data-ck="s6" checked><span><strong>Initialize the trace db</strong> at <code>adws/adw_data/sssf.db</code></span></label>
+    <label class="ck"><input type="checkbox" data-ck="s7" checked><span>Warm <code>uv</code> with any <code>adw_*.py --help</code> (~3s cold)</span></label>
+    <label class="ck"><input type="checkbox" data-ck="s8" checked><span>Touch the completion sentinel as the <strong>last line</strong></span></label>
+      </div>
+      <aside class="danger"><strong>The trace db must exist before OBSERVE.</strong> Verified: the
+      visualizer refuses to start without it (<samp>[sssf] sssf.db not found</samp>, then exits). Since
+      <code>just mount</code> ends at observe &mdash; before any ADW has run &mdash; a fresh sandbox would
+      start a UI that dies instantly. The tracer's DDL is all <code>CREATE TABLE IF NOT EXISTS</code>, so
+      initializing here is idempotent.</aside>
+      <p><strong>Gate &mdash; four assertions:</strong></p>
+      <div class="cklist">
+    <label class="ck"><input type="checkbox" data-ck="g1" checked><span><code>git status --porcelain</code> clean <strong>and</strong> <code>git rev-parse HEAD</code> matches the expected SHA</span></label>
+    <label class="ck"><input type="checkbox" data-ck="g2" checked><span><code>pi --list-models</code> returns <strong>non-empty output</strong> (it exits 0 while empty)</span></label>
+    <label class="ck"><input type="checkbox" data-ck="g3" checked><span><strong>Ping every roster model</strong> &mdash; <code>respond with pong</code>, all must answer</span></label>
+    <label class="ck"><input type="checkbox" data-ck="g4" checked><span>Report remaining OpenRouter credit on the runtime key</span></label>
+    <label class="ck"><input type="checkbox" data-ck="g5" checked><span><strong>Assert a test call reports non-zero cost</strong> &mdash; proves the rate table is loaded, not just the models</span></label>
+      </div>
+      <div class="gate"><strong>On fail: report and STOP. Do not destroy the VM.</strong> Leave it up so it
+      can be debugged, exit non-zero, and keep <code>just teardown</code> an explicit decision. A gate that
+      auto-destroys throws away the evidence you need to fix it.</div>
+      <aside class="danger"><strong>The <code>cost</code> block is mandatory and all-or-nothing.</strong>
+      pi defaults cost to <mark>all zeros</mark> when rates are absent, and
+      <code>agent_pi.py:276</code> reads <code>usage.cost.total</code> straight from pi &mdash; so a
+      missing rate table means every run reports <samp>$0.0000</samp> while really spending money.
+      Observed: a 463.6k-token run logged <samp>$0.0000</samp>.
+      <br><br>Worse, the schema requires <strong>all four</strong> fields
+      (<code>input</code>, <code>output</code>, <code>cacheRead</code>, <code>cacheWrite</code>). A partial
+      block fails validation and pi drops <mark>the entire roster</mark>, not just that model:
+      <samp>must have required properties cacheRead, cacheWrite &rarr; No models available.</samp>
+      Use <code>0.0</code> where a provider publishes no cache-write rate.
+      <br><br>Verified fixed: with rates loaded, a 1,797-token run reported <samp>$0.0081</samp>.</aside>
+      <table>
+        <tr><th>Model</th><th>input</th><th>output</th><th>cacheRead</th><th>cacheWrite</th></tr>
+        <tr><td><code>deepseek/deepseek-v4-flash-0731</code></td><td>0.09</td><td>0.18</td><td>0.018</td><td>0.0</td></tr>
+        <tr><td><code>openai/gpt-5.6-luna</code></td><td>0.1</td><td>0.6</td><td>0.01</td><td>0.125</td></tr>
+        <tr><td><code>z-ai/glm-5.2</code></td><td>0.76</td><td>2.42</td><td>0.14</td><td>0.0</td></tr>
+        <tr><td><code>openai/gpt-5.6-terra</code></td><td>1.0</td><td>6.0</td><td>0.1</td><td>1.25</td></tr>
+        <tr><td><code>google/gemini-3.6-flash</code></td><td>1.5</td><td>7.5</td><td>0.15</td><td>0.0833</td></tr>
+        <tr><td><code>anthropic/claude-sonnet-5</code></td><td>2.0</td><td>10.0</td><td>0.2</td><td>2.5</td></tr>
+        <tr><td><code>x-ai/grok-4.5</code></td><td>2.0</td><td>6.0</td><td>0.3</td><td>0.0</td></tr>
+        <tr><td><code>moonshotai/kimi-k3</code></td><td>3.0</td><td>15.0</td><td>0.3</td><td>0.0</td></tr>
+        <tr><td><code>openai/gpt-5.6-sol</code></td><td>5.0</td><td>30.0</td><td>0.5</td><td>6.25</td></tr>
+        <tr><td><code>anthropic/claude-opus-5</code></td><td>5.0</td><td>25.0</td><td>0.5</td><td>6.25</td></tr>
+      </table>
+      <p style="color:var(--muted);font-size:.86rem">Per-million-token rates, pulled live from OpenRouter 2026-08-04. Regenerate when pricing moves.</p>
+      <aside><strong>Integrity is <code>git</code>, not a hash.</strong> Verified: truncating tracked files
+      immediately yields <samp> M justfile</samp> / <samp> M README.md</samp>. Nothing to precompute, and if
+      corruption destroys <code>.git</code>, git fails loudly.</aside>
+    </div>
+
+    <div class="phase">
+      <h3>4. EXECUTE <span class="pill">host-triggered &middot; returns instantly</span></h3>
+      <div class="cklist">
+    <label class="ck"><input type="checkbox" data-ck="e1" checked><span><code>ssh &lt;vm&gt; 'cd app &amp;&amp; ( nohup just --shell bash --shell-arg -c adw sdlc "&lt;prompt&gt;" &gt; run.log 2&gt;&amp;1 &lt; /dev/null &amp; echo $! )'</code></span></label>
+    <label class="ck"><input type="checkbox" data-ck="e2" checked><span>Capture the PID into the run record</span></label>
+    <label class="ck"><input type="checkbox" data-ck="e3" checked><span><code>just run</code> (generic) and <code>just agent</code> (persistent resumable session) alongside the default</span></label>
+      </div>
+      <div class="gate"><strong>Gate:</strong> returns immediately with a PID.</div>
+      <aside class="danger">All three detachment pieces are required or SSH never returns:
+      <code>nohup</code>, output redirect, <code>&lt; /dev/null</code>. And
+      <code>--shell bash --shell-arg -c</code> is <mark>mandatory</mark> &mdash; the justfile sets
+      <code>shell := ["zsh", "-ic"]</code> and zsh is not in the image; installing it costs 35s of apt for
+      no benefit.</aside>
+    </div>
+
+    <div class="phase">
+      <h3>5. OBSERVE <span class="pill">host / browser</span></h3>
+      <div class="cklist">
+    <label class="ck"><input type="checkbox" data-ck="o1" checked><span>Start Inkwell on 4501 and the visualizer on 4600 (<code>bun run server/index.ts</code> serves built UI + API on one port)</span></label>
+    <label class="ck"><input type="checkbox" data-ck="o2" checked><span><code>ssh exe.dev share port &lt;vm&gt; 4501</code> &mdash; default proxy port is 8000, so this is mandatory</span></label>
+    <label class="ck"><input type="checkbox" data-ck="o3" checked><span><code>ssh exe.dev share set-public &lt;vm&gt;</code></span></label>
+    <label class="ck"><input type="checkbox" data-ck="o4" checked><span>Print both URLs after the gate passes</span></label>
+      </div>
+      <div class="gate"><strong>Gate:</strong> app returns 200 anonymously; visualizer returns 200 for the
+      logged-in owner.</div>
+      <aside class="good"><strong>Verified end to end.</strong> Both served simultaneously from one sandbox,
+      app anonymous, visualizer showing a real ADW trace and gated to the owner. Servers must bind
+      <code>0.0.0.0</code>; Bun does by default (<code>ss -ltn</code> shows <samp>*:4501</samp>).</aside>
+    </div>
+
+    <div class="phase">
+      <h3>6. TEARDOWN <span class="pill">host &middot; only when we decide</span></h3>
+      <div class="cklist">
+    <label class="ck"><input type="checkbox" data-ck="t1"><span><strong>Capture the key's actual spend</strong> before revoking, into the run record</span></label>
+    <label class="ck"><input type="checkbox" data-ck="t2"><span>Pull artifacts over SSH: <code>specs/</code>, <code>app_docs/</code>, <code>adws/adw_data/sssf.db</code>, <code>run.log</code></span></label>
+    <label class="ck"><input type="checkbox" data-ck="t3"><span><strong><code>git bundle</code> the sandbox's commits</strong> and pull the bundle down</span></label>
+    <label class="ck"><input type="checkbox" data-ck="t4"><span>Revoke the runtime key by <code>key_hash</code></span></label>
+    <label class="ck"><input type="checkbox" data-ck="t5"><span><code>ssh exe.dev rm &lt;vm&gt;</code></span></label>
+    <label class="ck"><input type="checkbox" data-ck="t6"><span>Mark the run record closed</span></label>
+    <label class="ck"><input type="checkbox" data-ck="t7"><span><code>just reap</code> &mdash; delete every <code>sbx-</code> key whose VM is gone or record is closed</span></label>
+      </div>
+      <div class="gate"><strong>Gate:</strong> the key is <strong>absent from <code>GET /api/v1/keys</code></strong>.</div>
+      <aside class="danger"><strong>Do not verify revocation with <code>GET /api/v1/key</code>.</strong>
+      Measured: immediately after a successful <code>DELETE</code>, that endpoint still returned 200 for the
+      dead key while the authoritative key <em>list</em> already showed it gone. Assert on the list.
+      <br><br><strong>The provisioning key cannot do inference</strong> &mdash; it returns
+      <samp>User not found.</samp> It mints and revokes only, which is why the gate ping must use the minted
+      <em>runtime</em> key.</aside>
+      <aside><strong>Artifacts are not enough.</strong> SSSF commits plan, code and docs separately; copying
+      files down loses that history.
+<pre><code class="language-bash">ssh &lt;vm&gt; 'cd app &amp;&amp; git bundle create /tmp/run.bundle main'
+scp &lt;vm&gt;.exe.xyz:/tmp/run.bundle .sandbox/runs/&lt;run-id&gt;.bundle
+git fetch .sandbox/runs/&lt;run-id&gt;.bundle main:sandbox/&lt;run-id&gt;</code></pre>
+      Order matters: artifacts out &rarr; revoke &rarr; destroy. A crash between revoke and destroy leaves a
+      dead key rather than a live one.</aside>
+    </div>
+
+    <h3>Build Phase 3 &mdash; Integration &amp; polish</h3>
+    <div class="cklist">
+    <label class="ck"><input type="checkbox" data-ck="i1" checked><span><code>just mount</code> chains create &rarr; fill &rarr; setup &rarr; observe. <strong>Never teardown.</strong></span></label>
+    <label class="ck"><input type="checkbox" data-ck="i2"><span><code>just runs</code> &mdash; list <code>.sandbox/runs/*.json</code> with status, model, spend</span></label>
+    <label class="ck"><input type="checkbox" data-ck="i3"><span><code>just compare &lt;run-ids&gt;</code> &mdash; the ranked best-of-N table</span></label>
+    <label class="ck"><input type="checkbox" data-ck="i4"><span>Patch <code>exedev vm snapshot</code> to <code>sync</code> the source before <code>cp</code></span></label>
+    <label class="ck"><input type="checkbox" data-ck="i5"><span>Update SSSF README + cookbooks for <code>just sdlc</code> &rarr; <code>just adw sdlc</code></span></label>
+    <label class="ck"><input type="checkbox" data-ck="i6"><span><code>/sssf-sandbox-orchestrator</code> skill (after the recipes work) + add it to the strip manifest</span></label>
+    </div>
+
+    <h3>Golden VM variant <span class="pill">N &ge; 3</span></h3>
+    <div class="cklist">
+    <label class="ck"><input type="checkbox" data-ck="gv1"><span><code>ssh &lt;golden&gt; 'sync'</code> &mdash; <strong>mandatory</strong></span></label>
+    <label class="ck"><input type="checkbox" data-ck="gv2"><span><code>ssh exe.dev cp &lt;golden&gt; &lt;run-id&gt;</code> (0.37s, arrives with toolchain + warm caches)</span></label>
+    <label class="ck"><input type="checkbox" data-ck="gv3"><span>FILL still runs &mdash; a clone's code is stale by definition</span></label>
+    <label class="ck"><input type="checkbox" data-ck="gv4"><span>SETUP degrades to verify-only</span></label>
+    </div>
+    <aside class="danger">An unsynced <code>cp</code> produced <mark>5,641 zero-byte files</mark> and
+    reported no error. That is why the SETUP gate checks <code>git status</code> rather than that files
+    exist.</aside>
+  </section>
+
+  <section>
+    <h2>Step by Step Tasks</h2>
+    <p>The ordered build sequence. The phase blocks above are the reference detail.</p>
+    <div class="cklist">
+      <label class="ck"><input type="checkbox" data-ck="sbs1" checked><span><strong>1.</strong> Create <code>just/adws.just</code>. Move <code>prompt, ask, scout, plan, plan-build, build-test, build-review, document, sdlc, simple-sdlc</code> verbatim. Add <code>set working-directory := '..'</code> and a local <code>config :=</code>. Add the three missing ADWs (<code>build</code>, <code>quality</code>, <code>plan-build-test-quality</code>).</span></label>
+      <label class="ck"><input type="checkbox" data-ck="sbs2" checked><span><strong>2.</strong> In the root justfile replace those recipes with <code>mod adw 'just/adws.just'</code>. Verify <code>just adw --list</code> and <code>just adw scout --help</code>.</span></label>
+      <label class="ck"><input type="checkbox" data-ck="sbs3" checked><span><strong>3.</strong> Add <code>.sandbox/</code> to <code>.gitignore</code>. Write the run-record helper (create, read field, set field, close).</span></label>
+      <label class="ck"><input type="checkbox" data-ck="sbs4" checked><span><strong>4.</strong> Write <code>sandbox_sandbox_mount/strip_manifest.txt</code>. Include <code>just/sandbox/</code>, <code>sandbox_mount/host/setup_sandbox.py</code>, <code>sandbox_mount/host/teardown.py</code>, <code>.claude/skills/sandbox-exe-dev/</code>. <mark>Exclude <code>sandbox_mount/guest/provision.sh</code></mark>.</span></label>
+      <label class="ck"><input type="checkbox" data-ck="sbs5" checked><span><strong>5.</strong> Write <code>sandbox_mount/guest/provision.sh</code>: strip → bun → just → <code>models.json</code> → <code>bun install</code> → warm uv → <code>touch /tmp/SETUP_READY</code> last.</span></label>
+      <label class="ck"><input type="checkbox" data-ck="sbs6" checked><span><strong>6.</strong> Write <code>create.just</code>: mint key (name <code>sbx-&lt;run-id&gt;</code>, <code>limit</code> default <code>50.00</code>, overridable per run) → <code>exe.dev new --tag inkwell</code> → write run record with <code>vm_name</code>, <code>key_hash</code>, <code>limit</code>, generated <code>session_id</code> UUID → wait for SSH.</span></label>
+      <label class="ck"><input type="checkbox" data-ck="sbs7" checked><span><strong>7.</strong> Write <code>fill.just</code>: <code>git clone</code> the public URL into <code>app/</code>, optional <code>checkout SHA</code>, record <code>commit_sha</code>, then write <code>.env</code> containing the runtime key.</span></label>
+      <label class="ck"><input type="checkbox" data-ck="sbs8" checked><span><strong>8.</strong> Write <code>setup.just</code>: run provision, then assert all three gates. On failure, destroy and exit non-zero.</span></label>
+      <label class="ck"><input type="checkbox" data-ck="sbs9" checked><span><strong>9.</strong> Write <code>observe.just</code>: <code>share port &lt;vm&gt; 4501</code>, start the visualizer, mint a VM token, print both URLs.</span></label>
+      <label class="ck"><input type="checkbox" data-ck="sbs10" checked><span><strong>10.</strong> Write <code>execute.just</code> with three recipes: <code>run</code> (generic), <code>execute</code> (default SDLC, detached), <code>agent</code> (Claude Code, session-id, resumable).</span></label>
+      <label class="ck"><input type="checkbox" data-ck="sbs11" checked><span><strong>11.</strong> Write <code>teardown.just</code>: pull artifacts → revoke by hash → <code>exe.dev rm</code> → close record. Plus <code>reap</code> for orphaned keys.</span></label>
+      <label class="ck"><input type="checkbox" data-ck="sbs12" checked><span><strong>12.</strong> Add the <code>mount</code> chain to the root justfile: create → fill → setup → observe. Confirm teardown is absent.</span></label>
+      <label class="ck"><input type="checkbox" data-ck="sbs13"><span><strong>13.</strong> Patch <code>vm.py</code> so <code>snapshot</code> runs <code>sync</code> on the source before <code>cp</code>.</span></label>
+      <label class="ck"><input type="checkbox" data-ck="sbs14"><span><strong>14.</strong> <strong>Validate on a real VM:</strong> mount, confirm the gate passes, run <code>just agent</code> twice and prove the second call remembers the first, open both URLs, then teardown and confirm the key 401s.</span></label>
+    </div>
+  </section>
+
+  <section>
+    <h2>Testing Strategy</h2>
+    <p>The health gate is the test that matters — everything else runs on top of it.</p>
+    <table>
+      <tr><th>Level</th><th>What</th><th>How</th></tr>
+      <tr><td>Unit</td><td>Run record round-trip; strip manifest excludes provision.sh</td><td>Local, no VM</td></tr>
+      <tr><td>Contract</td><td><code>just adw --list</code> resolves; module cwd is repo root</td><td>Local <code>just</code></td></tr>
+      <tr><td>Integration</td><td>Full mount on a throwaway VM, gate passes</td><td>One real VM</td></tr>
+      <tr><td>Adversarial</td><td>Corrupt the tree deliberately, confirm the gate <em>fails</em></td><td>Truncate a file, re-run gate</td></tr>
+      <tr><td>Lifecycle</td><td>Revoked key returns 401 after teardown</td><td>curl with the dead key</td></tr>
+    </table>
+    <aside class="danger"><strong>The gate must be tested by making it fail.</strong> A health check
+    that has only ever passed is not a gate. The unsynced-clone corruption passed every naive check:
+    files existed, <code>just --list</code> exited 0, and 5,641 of them were empty.</aside>
+  </section>
+
+  <section>
+    <h2>Acceptance Criteria</h2>
+    <ul>
+      <li><code>just adw sdlc "..."</code> runs from the repo root and resolves <code>adws/</code> correctly.</li>
+      <li><code>just mount demo-01</code> completes in <strong>&lt; 20s</strong> and prints two URLs.</li>
+      <li>The mounted copy contains <strong>no</strong> <code>just/sandbox/</code> and no <code>sandbox-exe-dev</code> skill.</li>
+      <li>A deliberately truncated file makes the gate <strong>fail</strong> and the VM gets destroyed.</li>
+      <li><code>just agent demo-01 "remember 42"</code> then <code>just agent demo-01 "what number?"</code> answers <samp>42</samp>.</li>
+      <li><code>just mount</code> never destroys a VM on the success path.</li>
+      <li>After <code>just teardown demo-01</code>, the key is <strong>absent from <code>GET /api/v1/keys</code></strong> and the VM is gone. (Verify against the key <em>list</em>: <code>GET /api/v1/key</code> still returns 200 for a just-deleted key.)</li>
+      <li>Nothing in the sandbox ever holds the OpenRouter <em>provisioning</em> key.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Validation Commands</h2>
+<pre><code># in-sandbox execution layer resolves
+just adw --list
+just adw scout --help
+
+# out-sandbox orchestration, one sandbox end to end
+just mount demo-01
+just run     demo-01 "uname -a"
+just execute demo-01 "add a word-count badge to the editor footer"
+just agent   demo-01 "remember the number 42, reply STORED"
+just agent   demo-01 "what number did I ask you to remember?"
+
+# prove the strip worked
+ssh demo-01.exe.xyz 'test ! -d app/just/sandbox && echo STRIPPED'
+
+# explicit, separate, never chained
+just teardown demo-01
+curl -s -o /dev/null -w '%{http_code}\n' https://openrouter.ai/api/v1/auth/key \
+  -H "Authorization: Bearer $DEAD_RUNTIME_KEY"   # expect 401
+</code></pre>
+  </section>
+
+  <section class="freeform">
+    <h2>Freeform</h2>
+
+    <h3>The two <code>just</code> gotchas that would have broken this design</h3>
+    <p>Both verified locally on <code>just 1.49</code> (VM runs 1.58) before writing this plan.
+    <code>mod</code> is not <code>import</code>:</p>
+    <table>
+      <tr><th>Behavior</th><th><code>import</code></th><th><code>mod</code> <span class="pill">chosen</span></th></tr>
+      <tr><td>Recipe names</td><td>flattened into root</td><td>namespaced: <code>just adw plan</code></td></tr>
+      <tr><td>Parent variables</td><td>inherited</td><td><mark>NOT inherited</mark> — <code>config</code> is undefined</td></tr>
+      <tr><td>Working directory</td><td>repo root</td><td><mark><code>just/</code></mark> — <code>adws/</code> is invisible</td></tr>
+      <tr><td>Parent <em>settings</em></td><td>inherited</td><td><mark>NOT inherited</mark> — <code>positional-arguments</code> silently lost</td></tr>
+      <tr><td>Fix required</td><td>none</td><td>four lines at the top of the module</td></tr>
+    </table>
+    <aside class="danger"><strong>Found during the build, worse than the variable problem.</strong>
+    Settings are not inherited either. Without <code>set positional-arguments</code> in the module, a
+    recipe runs under <code>sh</code> with <code>$@</code> <mark>empty</mark> — so
+    <code>just adw ask scout "where is auth"</code> would have silently dropped every argument and run
+    the agent with no prompt. No error, just a wrong run. The module also needs
+    <code>set dotenv-load</code>, and a <code>default</code> recipe, because a bare <code>just adw</code>
+    otherwise executes whichever recipe happens to be first in the file.
+    <br><br>Also: <code>just adw --list</code> is not valid syntax in just 1.49 — it reads
+    <code>adw --list</code> as a recipe name. The working form is <code>just --list adw</code>.</aside>
+<pre><code class="language-just"># just/adws.just — the two lines that make mod work
+set working-directory := '..'                                    # else cwd is just/
+config := env_var_or_default("SSSF_CONFIG", "adws/adw_sssf_config/sssf.config.yaml")
+
+# read-only recon
+scout *ARGS:
+    uv run adws/adw_scout.py --config {{config}} "$@"</code></pre>
+    <aside class="danger">Without <code>set working-directory := '..'</code> every recipe fails with
+    <samp>No such file or directory: adws/adw_scout.py</samp>. Observed, not theorized.</aside>
+
+    <h3>Root justfile: before &rarr; after</h3>
+    <div class="lane">
+      <div class="card">
+        <h4>Before</h4>
+<pre><code class="language-just">config := env_var_or_default(...)
+
+scout *ARGS:
+    uv run adws/adw_scout.py ...
+plan *ARGS:
+    uv run adws/adw_plan.py ...
+sdlc *ARGS:
+    uv run adws/adw_plan_build_test.py ...
+# ...10 recipes</code></pre>
+      </div>
+      <div class="card">
+        <h4>After</h4>
+<pre><code class="language-just">mod adw 'just/adws.just'          # IN
+
+import 'just/sandbox/create.just'  # OUT
+import 'just/sandbox/fill.just'
+import 'just/sandbox/setup.just'
+import 'just/sandbox/execute.just'
+import 'just/sandbox/observe.just'
+import 'just/sandbox/teardown.just'
+
+# create -> fill -> setup -> observe
+# NO teardown, ever
+mount RUN_ID:
+    just create  {{RUN_ID}}
+    just fill    {{RUN_ID}}
+    just setup   {{RUN_ID}}
+    just observe {{RUN_ID}}</code></pre>
+      </div>
+    </div>
+    <aside><strong>Breaking change:</strong> <code>just sdlc "..."</code> becomes
+    <code>just adw sdlc "..."</code>. The SSSF README and cookbooks reference the old form and will
+    need updating, since this repo is public.</aside>
+
+    <h3>The three execute modes</h3>
+    <figure>
+      <svg viewBox="0 0 900 250" width="100%" role="img" aria-label="Three execute modes">
+        <defs>
+          <marker id="ar" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#22D3EE"/>
+          </marker>
+        </defs>
+        <rect x="8" y="8" width="250" height="234" rx="10" fill="#0d1422" stroke="#1E2A3C"/>
+        <text x="24" y="36" fill="#F59E0B" font-size="15" font-family="monospace">just run</text>
+        <text x="24" y="60" fill="#9AA4B2" font-size="12">generic escape hatch</text>
+        <text x="24" y="92" fill="#F5F5F0" font-size="11.5" font-family="monospace">ssh vm "&lt;cmd&gt;"</text>
+        <text x="24" y="120" fill="#9AA4B2" font-size="12">synchronous, prints output</text>
+        <text x="24" y="146" fill="#9AA4B2" font-size="12">no run-record writes</text>
+        <text x="24" y="180" fill="#34D399" font-size="12">use: debugging, one-offs</text>
+
+        <rect x="272" y="8" width="250" height="234" rx="10" fill="#0d1422" stroke="#22D3EE"/>
+        <text x="288" y="36" fill="#22D3EE" font-size="15" font-family="monospace">just execute</text>
+        <text x="288" y="60" fill="#9AA4B2" font-size="12">the default: full SDLC</text>
+        <text x="288" y="92" fill="#F5F5F0" font-size="11.5" font-family="monospace">just adw sdlc "..."</text>
+        <text x="288" y="120" fill="#9AA4B2" font-size="12">detached, returns a PID</text>
+        <text x="288" y="146" fill="#9AA4B2" font-size="12">deterministic, no chat</text>
+        <text x="288" y="180" fill="#34D399" font-size="12">use: fire and step away</text>
+
+        <rect x="536" y="8" width="356" height="234" rx="10" fill="#0d1422" stroke="#A78BFA"/>
+        <text x="552" y="36" fill="#A78BFA" font-size="15" font-family="monospace">just agent</text>
+        <text x="552" y="60" fill="#9AA4B2" font-size="12">hand off, then keep talking</text>
+        <text x="552" y="92" fill="#F5F5F0" font-size="11.5" font-family="monospace">claude -p --session-id &lt;uuid&gt;</text>
+        <text x="552" y="112" fill="#F5F5F0" font-size="11.5" font-family="monospace">claude -p --resume &lt;uuid&gt;</text>
+        <text x="552" y="140" fill="#9AA4B2" font-size="12">runs /sssf inside the sandbox</text>
+        <text x="552" y="164" fill="#9AA4B2" font-size="12">session_id lives in the run record</text>
+        <text x="552" y="196" fill="#34D399" font-size="12">use: steer without SSH-ing in</text>
+        <path d="M700,206 C740,230 790,230 830,206" stroke="#A78BFA" fill="none" marker-end="url(#ar)"/>
+      </svg>
+      <figcaption>Phase 4 has three entry points; <code>execute</code> is the default</figcaption>
+    </figure>
+
+<pre><code class="language-just"># just/sandbox/execute.just
+
+# generic: run any command inside a sandbox
+run RUN_ID +CMD:
+    ssh $(just _vm {{RUN_ID}}).exe.xyz 'cd app && {{CMD}}'
+
+# default: full SDLC, detached, we step away
+execute RUN_ID PROMPT:
+    ssh $(just _vm {{RUN_ID}}).exe.xyz \
+      'cd app && ( nohup just --shell bash --shell-arg -c adw sdlc "{{PROMPT}}" \
+        > run.log 2>&1 &lt; /dev/null &amp; echo $! )'
+
+# hand off to an agent we can keep chatting with
+agent RUN_ID PROMPT:
+    #!/usr/bin/env bash
+    VM=$(just _vm {{RUN_ID}}); SID=$(just _session {{RUN_ID}})
+    if just _agent_started {{RUN_ID}}; then FLAG="--resume $SID"; else FLAG="--session-id $SID"; fi
+    ssh $VM.exe.xyz "cd app && ANTHROPIC_API_KEY=implicit \
+      ANTHROPIC_BASE_URL=https://llm.int.exe.xyz \
+      claude -p $FLAG --dangerously-skip-permissions '{{PROMPT}}'"</code></pre>
+    <aside class="good"><strong>Verified working.</strong> Two separate SSH invocations,
+    <code>--session-id</code> then <code>--resume</code>: turn 1 stored <samp>42</samp>, turn 2
+    recalled <samp>42</samp>. The session survives the SSH connection dying, which is what makes
+    "hand off but keep talking" real rather than aspirational.</aside>
+
+    <h3>Run record — the only state shared across phases</h3>
+    <p>Each phase is a separate process, so <code>teardown</code> has no way to know which key to
+    revoke unless something persists. One JSON file per run, keyed by <code>RUN_ID</code>.</p>
+<pre><code class="language-json">// .sandbox/runs/demo-01.json
+{
+  "run_id":     "demo-01",
+  "vm_name":    "demo-01",
+  "key_hash":   "sha256:abc123...",     // revocation handle, written in CREATE
+  "session_id": "3f2a1b4c-5d6e-4f70-8a91-b2c3d4e5f601",  // claude --session-id, must be a UUID
+  "commit_sha": "573acb3",              // written in FILL, pins the run
+  "ports":      { "app": 4501, "obs": 5173 },
+  "pid":        4417,                   // written in EXECUTE
+  "created_at": "2026-08-04T14:22:00Z",
+  "closed_at":  null                    // set in TEARDOWN; non-null == key revoked
+}</code></pre>
+    <table>
+      <tr><th>Field</th><th>Written by</th><th>Read by</th><th>Why it must persist</th></tr>
+      <tr><td><code>vm_name</code></td><td>create</td><td>all</td><td>every SSH target</td></tr>
+      <tr><td><code>key_hash</code></td><td>create</td><td>teardown, reap</td><td>without it the key is unrevokable</td></tr>
+      <tr><td><code>session_id</code></td><td>create</td><td>agent</td><td>resuming needs a stable UUID</td></tr>
+      <tr><td><code>commit_sha</code></td><td>fill</td><td>gate, compare</td><td>makes N runs comparable</td></tr>
+      <tr><td><code>closed_at</code></td><td>teardown</td><td>reap</td><td>distinguishes live from orphaned</td></tr>
+    </table>
+
+    <h3>The health gate: four assertions</h3>
+    <figure>
+      <svg viewBox="0 0 900 200" width="100%" role="img" aria-label="Health gate assertions">
+        <rect x="6" y="26" width="166" height="126" rx="10" fill="#0d1422" stroke="#1E2A3C"/>
+        <text x="20" y="52" fill="#22D3EE" font-size="12.5" font-family="monospace">1 · git integrity</text>
+        <text x="20" y="76" fill="#9AA4B2" font-size="11">status --porcelain</text>
+        <text x="20" y="94" fill="#9AA4B2" font-size="11">clean + HEAD == sha</text>
+        <text x="20" y="118" fill="#EF4444" font-size="10.5">truncation shows</text>
+        <text x="20" y="134" fill="#EF4444" font-size="10.5">as ` M file`</text>
+
+        <rect x="182" y="26" width="166" height="126" rx="10" fill="#0d1422" stroke="#1E2A3C"/>
+        <text x="196" y="52" fill="#22D3EE" font-size="12.5" font-family="monospace">2 · pi models</text>
+        <text x="196" y="76" fill="#9AA4B2" font-size="11">--list-models must</text>
+        <text x="196" y="94" fill="#9AA4B2" font-size="11">be non-empty</text>
+        <text x="196" y="118" fill="#EF4444" font-size="10.5">exits 0 while empty</text>
+        <text x="196" y="134" fill="#EF4444" font-size="10.5">never trust $?</text>
+
+        <rect x="358" y="26" width="166" height="126" rx="10" fill="#0d1422" stroke="#22D3EE"/>
+        <text x="372" y="52" fill="#22D3EE" font-size="12.5" font-family="monospace">3 · roster ping</text>
+        <text x="372" y="76" fill="#9AA4B2" font-size="11">"respond with pong"</text>
+        <text x="372" y="94" fill="#9AA4B2" font-size="11">through EVERY model</text>
+        <text x="372" y="118" fill="#34D399" font-size="10.5">8 models, &lt;1 cent</text>
+        <text x="372" y="134" fill="#34D399" font-size="10.5">catches id drift</text>
+
+        <rect x="534" y="26" width="166" height="126" rx="10" fill="#0d1422" stroke="#1E2A3C"/>
+        <text x="548" y="52" fill="#22D3EE" font-size="12.5" font-family="monospace">4 · credit</text>
+        <text x="548" y="76" fill="#9AA4B2" font-size="11">report remaining</text>
+        <text x="548" y="94" fill="#9AA4B2" font-size="11">on the runtime key</text>
+        <text x="548" y="118" fill="#F59E0B" font-size="10.5">exhaustion mid-run</text>
+        <text x="548" y="134" fill="#F59E0B" font-size="10.5">reads as a 402</text>
+
+        <path d="M710,90 L750,90" stroke="#22D3EE" stroke-width="2"/>
+        <polygon points="756,90 748,85 748,95" fill="#22D3EE"/>
+        <rect x="762" y="40" width="132" height="42" rx="8" fill="#08170f" stroke="#34D399"/>
+        <text x="786" y="66" fill="#34D399" font-size="12.5" font-family="monospace">EXECUTE</text>
+        <rect x="762" y="96" width="132" height="42" rx="8" fill="#1c0d0d" stroke="#EF4444"/>
+        <text x="772" y="116" fill="#EF4444" font-size="11.5" font-family="monospace">REPORT + STOP</text>
+        <text x="772" y="131" fill="#9AA4B2" font-size="10">VM left up to debug</text>
+      </svg>
+      <figcaption>All four must pass. A failure stops the run and <strong>leaves the VM alive</strong> for debugging.</figcaption>
+    </figure>
+    <aside><strong>The gate does not auto-destroy.</strong> An earlier draft killed the VM on
+    failure; that throws away the evidence needed to diagnose it. Report, exit non-zero, leave the
+    box up. Teardown stays an explicit decision, always.</aside>
+    <table>
+      <tr><th>Roster model (all via OpenRouter, ids verified live)</th><th>In / Out per M</th><th>Provider under ZDR</th></tr>
+      <tr><td><code>deepseek/deepseek-v4-flash-0731</code></td><td>$0.09 / $0.18</td><td><strong>Parasail</strong> (US)</td></tr>
+      <tr><td><code>openai/gpt-5.6-luna</code></td><td>$0.10 / $0.60</td><td><strong>Azure</strong></td></tr>
+      <tr><td><code>z-ai/glm-5.2</code></td><td>$0.76 / $2.42</td><td><strong>CoreWeave</strong> (US)</td></tr>
+      <tr><td><code>openai/gpt-5.6-terra</code></td><td>$1.00 / $6.00</td><td><strong>Azure</strong></td></tr>
+      <tr><td><code>google/gemini-3.6-flash</code></td><td>$1.50 / $7.50</td><td>Google</td></tr>
+      <tr><td><code>anthropic/claude-sonnet-5</code></td><td>$2.00 / $10.00</td><td>Google Vertex</td></tr>
+      <tr><td><code>x-ai/grok-4.5</code></td><td>$2.00 / $6.00</td><td>xAI</td></tr>
+      <tr><td><code>moonshotai/kimi-k3</code></td><td>$3.00 / $15.00</td><td>Moonshot AI</td></tr>
+      <tr><td><code>anthropic/claude-opus-5</code></td><td>$5.00 / $25.00</td><td>Google Vertex</td></tr>
+    </table>
+
+    <h4>Zero data retention</h4>
+    <p><strong>All nine verified ZDR-capable</strong> on 2026-08-04 — every model returned
+    <samp>pong</samp> under <code>provider: {"zdr": true, "data_collection": "deny"}</code>.</p>
+    <dl>
+      <dt>provider.zdr <span class="pill">true / omitted</span></dt>
+      <dd>Route only to providers enforcing zero data retention.</dd>
+      <dt>provider.data_collection <span class="pill">allow (default) / deny</span></dt>
+      <dd><code>deny</code> restricts routing to providers that do not collect user data. Independent
+      of <code>zdr</code>; use both.</dd>
+    </dl>
+    <aside class="danger"><strong>Enforcement is an account setting, not per-request.</strong> pi's
+    <code>models.json</code> supports custom <code>headers</code> but <mark>no arbitrary request-body
+    fields</mark>, so <code>provider: {...}</code> cannot be injected through pi's config. Set the
+    data policy once in the OpenRouter dashboard (Settings &rarr; Privacy); it then applies to every
+    request from every key including minted runtime keys, and covers Claude Code too. The
+    per-request param stays in the gate ping so the gate <em>proves</em> ZDR routing resolves before
+    any real work runs.</aside>
+    <aside class="good"><strong>This sharpens the IP-hygiene beat.</strong> Under ZDR,
+    <code>deepseek-v4-flash-0731</code> is served by <strong>Parasail</strong> and
+    <code>glm-5.2</code> by <strong>CoreWeave</strong> — both US providers. The "Chinese labs may
+    train on your data" caution applies to those labs' own APIs, not to their open weights on
+    Western hosts. Under ZDR you are not talking to a Chinese lab at all.</aside>
+    <aside class="danger"><strong>Two id corrections from verification.</strong> There is no
+    <code>deepseek v3 0731</code> — the v3 line ends at <code>v3.2</code>; the 0731 build is
+    <code>deepseek-v4-flash-0731</code>. And <code>moonshotai/kimi-k3</code> is <mark>$3.00/$15.00,
+    about 5x <code>kimi-k2.6</code></mark> ($0.59/$2.48) — good as a frontier lane, expensive as a
+    default builder.</aside>
+
+    <h3>Credential lifecycle</h3>
+    <figure><img src="sandbox-mount-system/03-credentials.png" alt="Credential lifecycle across the boundary"></figure>
+    <dl>
+      <dt>Provisioning key <span class="pill">host only, long-lived</span></dt>
+      <dd>Lives in <code>OPENROUTER_PROVISIONING_KEY</code> on your machine. Never enters a sandbox,
+      never committed, never mounted. The only long-lived secret in the system.</dd>
+      <dt>Runtime key <span class="pill">per sandbox, $50 default</span></dt>
+      <dd>Minted in CREATE as <code>sbx-&lt;run-id&gt;</code>, injected in FILL via <code>.env</code>,
+      spend captured and key revoked in TEARDOWN by hash. <code>--limit</code> is per-run adjustable;
+      <mark>$50 is the default</mark> because a real SDLC run will blow through a token cap and die
+      mid-workflow, which looks like a bug rather than a budget.</dd>
+      <dt>Reaper <span class="pill">backstop</span></dt>
+      <dd>OpenRouter keys have no native TTL. If teardown never runs, the key outlives the sandbox.
+      <code>just reap</code> deletes every <code>sbx-</code> key whose VM is gone or whose record is
+      closed. Run it at the start of every session. The prefix is the only thing separating managed
+      keys from your personal ones.</dd>
+    </dl>
+
+    <h4>Why OpenRouter and not exe.dev's BYOK integration</h4>
+    <p>exe.dev integrations can hold your OpenAI, Anthropic, Fireworks and xAI keys and serve them at
+    <code>llm.int.exe.xyz</code> with <strong>no key on the VM at all</strong> — verified working. It
+    was seriously considered and rejected:</p>
+    <table>
+      <tr><th>Criterion</th><th>OpenRouter <span class="pill">chosen</span></th><th>exe.dev BYOK</th></tr>
+      <tr><td>Portability</td><td>laptop, exe.dev, E2B, CI</td><td><mark>exe.dev only</mark></td></tr>
+      <tr><td>Blast radius</td><td>$50 per sandbox, revocable by hash</td><td>account-wide limits, shared with everything else</td></tr>
+      <tr><td>Coverage</td><td>338 models, one namespace</td><td>4 providers</td></tr>
+      <tr><td><code>deepseek-v4-flash-0731</code></td><td>yes, $0.09/$0.18 per M</td><td><strong>no</strong> — serves the April preview</td></tr>
+      <tr><td>Key on VM</td><td>one disposable, capped</td><td>none ✅</td></tr>
+    </table>
+    <p>Portability is the disqualifier. A credential layer built on a provider-specific hostname
+    stops being a transferable asset the moment the sandbox provider changes, and the whole point of
+    this system is that it moves.</p>
+    <aside class="good"><strong>The managed gateway stays untouched.</strong>
+    <code>llm.int.exe.xyz</code> is already attached <code>auto:all</code> and serves 74 models with
+    <mark>zero keys configured</mark>. We build nothing on it, but it gives this public repo a real
+    property: anyone who clones it onto an exe.dev VM gets working agents without configuring a
+    single credential. Verified with both <code>claude</code> and <code>pi</code>.</aside>
+
+    <h3>Observability: two ports, one login</h3>
+    <figure><img src="sandbox-mount-system/04-observability.png" alt="Two ports exposed from the sandbox"></figure>
+    <p>Hosting two servers is unlimited. Only <strong>one port can be anonymous</strong>, and it is
+    whichever <code>share port</code> names — "public" is a property of that port, not of the VM.
+    Give it to the app; the agent view is then private by default, and transparent to you because
+    your browser already holds an exe.dev session.</p>
+    <table>
+      <tr><th>Surface</th><th>Port</th><th>Anonymous</th><th>You (logged in)</th><th>Command</th></tr>
+      <tr><td>Inkwell app</td><td>4501</td><td><strong>200</strong></td><td>200</td><td><code>share port &lt;vm&gt; 4501</code> + <code>share set-public</code></td></tr>
+      <tr><td>SSSF visualizer</td><td>4600</td><td>307 &rarr; login</td><td><strong>200</strong></td><td>nothing — alternate ports 3000-9999 are forwarded automatically</td></tr>
+    </table>
+    <aside class="good"><strong>Verified end to end.</strong> Both surfaces served simultaneously
+    from one sandbox: the app anonymously public, the visualizer showing a real ADW trace and gated
+    to the owner. No extra machinery, no reverse proxy, no tunnel.</aside>
+    <p>The VM-scoped bearer token is for <em>automation only</em> — headless Chromium has no exe.dev
+    cookie, so the Playwright validation gate needs
+    <code>X-Exedev-Authorization: Bearer &lt;token&gt;</code>.
+    <mark>The token cannot be embedded in a URL for browser use</mark>: Chromium strips credentials
+    before sending, so <code>https://x:TOKEN@vm.exe.xyz:4600/</code> lands on the login page even
+    though <code>curl -u</code> with the same token returns 200.</p>
+    <aside class="danger">Servers must bind <code>0.0.0.0</code>. Bound to <code>127.0.0.1</code>
+    the proxy cannot reach them and the URL silently 502s. Default proxy port is
+    <strong>8000</strong> (from <code>EXPOSE</code> in exeuntu), which is <em>not</em> Inkwell's
+    4501 — the remap is mandatory, not cosmetic.</aside>
+
+    <h3>Why N is nearly free</h3>
+    <figure><img src="sandbox-mount-system/05-fanout.png" alt="Fan-out to N sandboxes"></figure>
+    <p>Best-of-N means <strong>N separate sandboxes</strong>, not N agents inside one. Each is a full
+    six-phase run with its own VM, own key, own ports, own record. The loop is the only new code, and
+    per-run variance lives in exactly three places: the prompt, <code>SSSF_CONFIG</code>, and the model.</p>
+    <details>
+      <summary>Golden-VM path (worth it around N &ge; 3)</summary>
+      <p><code>sync</code> then <code>cp</code> replaces CREATE and most of SETUP: 0.37s instead of
+      ~10s, arriving with warm <code>node_modules</code>, warm <code>uv</code> cache and
+      <code>models.json</code> in place. FILL always runs, because a clone's code is stale by
+      definition.</p>
+      <p><mark>The <code>sync</code> is not optional.</mark> Skipping it produced 5,641 zero-byte
+      files with no error of any kind. This is why gate #1 hashes content rather than checking that
+      files exist.</p>
+    </details>
+    <details>
+      <summary>Rejected: one sandbox running N agents</summary>
+      <p>Defeats the purpose. The whole reason for the sandbox is that N agents cannot share one
+      filesystem, one port range, and one git state. Putting them back together reintroduces exactly
+      the collision the system exists to remove.</p>
+    </details>
+    <details>
+      <summary>Rejected: <code>--setup-script</code> as the provisioning mechanism</summary>
+      <p>Three disqualifiers, all measured: 10KiB cap; runs async via <code>exe-setup.service</code>
+      so <code>new</code> returning means nothing; and it cannot see <code>--env</code>, so it can
+      never receive the minted runtime key. Push code, then run <code>provision.sh</code> over SSH —
+      synchronous, uncapped, debuggable, versioned with the repo.</p>
+    </details>
+
+    <h3>Measured cost of one cold mount</h3>
+    <table>
+      <tr><th>Phase</th><th>Operation</th><th>Measured</th></tr>
+      <tr><td>create</td><td><code>exedev init</code> boot to SSH-ready</td><td>1.88s</td></tr>
+      <tr><td>fill</td><td><code>git clone</code> public repo, 216 files, no auth</td><td>2.61s</td></tr>
+      <tr><td>setup</td><td>bun + just from CDNs</td><td>~1s</td></tr>
+      <tr><td>setup</td><td><code>bun install</code> (54 pkgs)</td><td>0.40s</td></tr>
+      <tr><td>setup</td><td>cold <code>uv</code> PEP-723 resolve</td><td>3s</td></tr>
+      <tr><td colspan="2"><strong>Total to running factory</strong></td><td><strong>~10s</strong></td></tr>
+      <tr><td colspan="2">Anything via <code>apt</code> <span class="pill">avoid</span></td><td><mark>+35s</mark> (148 kB/s)</td></tr>
+    </table>
+
+    <h3>Gotcha ledger</h3>
+    <table>
+      <tr><th>Trap</th><th>Symptom if ignored</th><th>Guard</th></tr>
+      <tr><td><code>--env</code> in <code>/etc/profile.d</code></td><td>key silently empty in every <code>ssh vm "cmd"</code></td><td>write <code>.env</code> post-clone</td></tr>
+      <tr><td>missing <code>models.json</code></td><td><code>pi</code> exits 0 with no models; first agent call fails</td><td>gate assertion #2</td></tr>
+      <tr><td>unsynced <code>cp</code></td><td>5,641 empty files, no error</td><td><code>sync</code> + gate #1</td></tr>
+      <tr><td>shared host key</td><td>first exec on every VM dies</td><td>one wildcard <code>known_hosts</code> line</td></tr>
+      <tr><td><code>zsh -ic</code> in justfile</td><td><samp>could not find the shell zsh</samp></td><td><code>--shell bash --shell-arg -c</code></td></tr>
+      <tr><td><code>mod</code> cwd</td><td><samp>No such file: adws/adw_*.py</samp></td><td><code>set working-directory := '..'</code></td></tr>
+      <tr><td>detach incomplete</td><td>SSH hangs forever on execute</td><td><code>nohup</code> + redirect + <code>&lt; /dev/null</code></td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Notes</h2>
+    <ul>
+      <li><strong>No new dependencies.</strong> Everything uses <code>just</code>, <code>ssh</code>,
+      <code>curl</code>, and the vendored <code>exedev</code> CLI already in the repo.</li>
+      <li><strong>Every number in this plan is measured.</strong> The last estimate, phase 2, was
+      closed at 2.61s by a full end-to-end run: clone &rarr; provision &rarr; real ADW &rarr; both
+      surfaces served and validated in a browser.</li>
+      <li><strong>Public repo.</strong> <code>github.com/disler/inkwell-agent-sandboxes-and-software-factory</code>.
+      Clone needs no auth. Pushing a results branch would need the GitHub integration; V1 pulls
+      artifacts down over SSH instead, keeping zero credentials in the sandbox.</li>
+      <li><strong>Deferred:</strong> <code>/sssf-sandbox-orchestrator</code>, a composite skill
+      combining <code>/sssf</code> and <code>/sandbox-exe-dev</code> awareness, is what will drive
+      1&rarr;N. It is out of scope here and becomes tractable once one sandbox is solid.</li>
+      <li><strong>Known cosmetic issue:</strong> exe.dev ships a pi extension that errors on every
+      invocation (<samp>unrecognized reflection shape</samp>). Harmless, but it writes to stderr,
+      which matters if the factory parses agent output.</li>
+      <li><strong>Migration:</strong> <code>just sdlc</code> &rarr; <code>just adw sdlc</code> is a
+      breaking change to a public repo's documented interface. SSSF cookbooks reference the old form.</li>
+    </ul>
+  </section>
+
+</div>
+<script>
+(function(){
+  const KEY='sandbox-mount-plan-v1';
+  const state=JSON.parse(localStorage.getItem(KEY)||'{}');
+  const boxes=[...document.querySelectorAll('input[type=checkbox][data-ck]')];
+  function paint(){
+    let done=0;
+    boxes.forEach(b=>{ if(b.checked){done++; b.closest('.ck').classList.add('done');}
+                       else b.closest('.ck').classList.remove('done'); });
+    document.getElementById('ckcount').textContent=done+' / '+boxes.length;
+    document.getElementById('ckbar').style.width=(boxes.length?done/boxes.length*100:0)+'%';
+  }
+  boxes.forEach(b=>{
+    if(b.dataset.ck in state) b.checked=!!state[b.dataset.ck];  // else keep the HTML default (verified at build time)
+    b.addEventListener('change',()=>{ state[b.dataset.ck]=b.checked;
+      localStorage.setItem(KEY,JSON.stringify(state)); paint(); });
+  });
+  window.ckReset=function(){ localStorage.removeItem(KEY);
+    boxes.forEach(b=>b.checked=false); paint(); };
+  paint();
+})();
+</script>
+</body>
+</html>

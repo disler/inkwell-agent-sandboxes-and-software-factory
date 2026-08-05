@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>inkwell</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%2311161e'/><path d='M16 6L23 16C23 19 20 22 16 26C12 22 9 19 9 16L16 6Z' fill='none' stroke='%236ee7b7' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/><path d='M16 14V26' stroke='%236ee7b7' stroke-width='2.5' stroke-linecap='round'/><circle cx='16' cy='14' r='1.5' fill='%236ee7b7'/></svg>">
+<script>(function(){var t=localStorage.getItem('inkwell-theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<aside class="sidebar" aria-label="Posts library">
+  <header class="sidebar-head">
+    <h1 class="brand">
+      <svg class="brand-icon" width="36" height="36" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="7" fill="#11161e"/>
+        <path d="M16 6L23 16C23 19 20 22 16 26C12 22 9 19 9 16L16 6Z" fill="none" stroke="#6ee7b7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M16 14V26" stroke="#6ee7b7" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="16" cy="14" r="1.5" fill="#6ee7b7"/>
+      </svg>
+      <span>inkwell</span>
+    </h1>
+    <button id="drawer-close" class="close-btn" type="button" title="Close posts" aria-label="Close posts">&times;</button>
+  </header>
+  <div class="search-box">
+    <input id="search-input" class="search-input" type="text" placeholder="Search posts…" autocomplete="off" spellcheck="false">
+    <button id="search-clear" class="search-clear" type="button" title="Clear search" aria-label="Clear search" hidden>&times;</button>
+    <span id="search-count" class="search-count" hidden></span>
+  </div>
+  <div class="list-head">
+    <button id="new-post" class="new-btn" type="button">+ new <kbd class="key-hint">⌘N</kbd></button>
+  </div>
+  <nav id="post-list" class="post-list" aria-label="Posts"></nav>
+  <footer class="sidebar-footer">
+    <span id="total-posts" class="meta">0 posts</span>
+    <span id="total-words" class="meta">0 words</span>
+  </footer>
+</aside>
+
+<div class="scrim" id="scrim"></div>
+
+<header class="topbar">
+  <div class="topbar-left">
+    <button id="posts-toggle" class="posts-toggle" type="button" title="Open posts" aria-label="Open posts" aria-haspopup="true" aria-expanded="false">
+      <svg class="brand-icon" width="22" height="22" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="7" fill="#11161e"/>
+        <path d="M16 6L23 16C23 19 20 22 16 26C12 22 9 19 9 16L16 6Z" fill="none" stroke="#6ee7b7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M16 14V26" stroke="#6ee7b7" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="16" cy="14" r="1.5" fill="#6ee7b7"/>
+      </svg>
+      <span>Posts</span>
+    </button>
+  </div>
+  <div class="topbar-right">
+    <button id="menu-toggle" class="menu-toggle" type="button" title="Editor menu" aria-label="Editor menu" aria-haspopup="true" aria-expanded="false">⋯</button>
+    <div id="menu-panel" class="menu-panel">
+      <div class="menu-section" aria-label="View">
+        <div class="mode-switch" role="group" aria-label="View mode">
+          <button id="mode-edit" class="btn mode-btn" type="button" data-mode="edit" aria-pressed="true" title="Edit only">edit</button>
+          <button id="mode-split" class="btn mode-btn" type="button" data-mode="split" aria-pressed="false" title="Editor + live preview">split</button>
+          <button id="mode-preview" class="btn mode-btn" type="button" data-mode="preview" aria-pressed="false" title="Preview only">preview</button>
+        </div>
+        <button id="focus-toggle" class="menu-item" type="button" title="Toggle focus mode">focus <kbd class="key-hint">⌘⇧F</kbd></button>
+      </div>
+      <div class="menu-section" aria-label="Type">
+        <span class="menu-label">Type size</span>
+        <div class="menu-row">
+          <button id="font-decrease" class="menu-item menu-item-sm" type="button" title="Decrease font size" aria-label="Decrease font size">A−</button>
+          <button id="font-increase" class="menu-item menu-item-sm" type="button" title="Increase font size" aria-label="Increase font size">A+</button>
+          <span class="menu-row-spacer"></span>
+          <button id="theme-toggle" class="btn theme-toggle-btn" type="button" title="Switch theme">light</button>
+        </div>
+      </div>
+      <div class="menu-section" aria-label="Progress">
+        <div class="goal-container" id="goal-container">
+          <label for="target-words" class="meta goal-label">Goal:</label>
+          <input id="target-words" class="goal-input" type="number" min="0" step="50" placeholder="Set target" title="Target word count">
+          <span id="goal-progress" class="meta goal-progress"></span>
+        </div>
+        <span id="reading-time" class="meta reading-time">0 min read</span>
+      </div>
+      <div class="menu-section menu-actions" aria-label="Actions">
+        <button id="shortcuts-toggle" class="menu-item" type="button" title="Open keyboard shortcuts">shortcuts <kbd class="key-hint">?</kbd></button>
+        <button id="publish" class="menu-item" type="button">publish</button>
+        <button id="delete" class="btn btn-danger menu-item-danger" type="button">delete</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="editor" id="editor" hidden>
+  <input id="title" class="title" type="text" placeholder="Untitled" autocomplete="off" spellcheck="false">
+  <div id="panes" class="panes">
+    <section class="pane editor-pane">
+      <span class="pane-label">markdown</span>
+      <textarea id="content" class="content" placeholder="Start writing…" spellcheck="true"></textarea>
+    </section>
+    <section class="pane preview-pane">
+      <span class="pane-label">preview</span>
+      <div id="preview" class="preview" aria-live="polite"></div>
+    </section>
+  </div>
+  <footer class="footer">
+    <span id="word-count" class="meta">0 words</span>
+    <span class="spacer"></span>
+    <span id="save-state" class="meta save-state">saved</span>
+  </footer>
+</main>
+
+<p id="empty" class="empty" hidden>No posts yet.</p>
+
+<div id="shortcuts-modal" class="modal-backdrop" hidden>
+  <div class="modal-content" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+    <div class="modal-header">
+      <h2 id="modal-title" class="modal-title">Keyboard Shortcuts</h2>
+      <button id="modal-close" class="close-btn" type="button" aria-label="Close">&times;</button>
+    </div>
+    <ul class="shortcuts-list">
+      <li class="shortcuts-item">
+        <span class="shortcuts-desc">Create new post</span>
+        <span class="shortcuts-keys"><kbd>⌘ N</kbd> / <kbd>Ctrl N</kbd></span>
+      </li>
+      <li class="shortcuts-item">
+        <span class="shortcuts-desc">Save post immediately</span>
+        <span class="shortcuts-keys"><kbd>⌘ S</kbd> / <kbd>Ctrl S</kbd></span>
+      </li>
+      <li class="shortcuts-item">
+        <span class="shortcuts-desc">Cycle view mode (edit → split → preview)</span>
+        <span class="shortcuts-keys"><kbd>⌘ ↵</kbd> / <kbd>Ctrl ↵</kbd></span>
+      </li>
+      <li class="shortcuts-item">
+        <span class="shortcuts-desc">Toggle focus mode</span>
+        <span class="shortcuts-keys"><kbd>⌘ Shift F</kbd> / <kbd>Ctrl Shift F</kbd></span>
+      </li>
+      <li class="shortcuts-item">
+        <span class="shortcuts-desc">Increase font size</span>
+        <span class="shortcuts-keys"><kbd>⌘ +</kbd> / <kbd>Ctrl +</kbd></span>
+      </li>
+      <li class="shortcuts-item">
+        <span class="shortcuts-desc">Decrease font size</span>
+        <span class="shortcuts-keys"><kbd>⌘ -</kbd> / <kbd>Ctrl -</kbd></span>
+      </li>
+      <li class="shortcuts-item">
+        <span class="shortcuts-desc">Open keyboard shortcuts help</span>
+        <span class="shortcuts-keys"><kbd>?</kbd> or <kbd>⌘ /</kbd></span>
+      </li>
+      <li class="shortcuts-item">
+        <span class="shortcuts-desc">Close modal</span>
+        <span class="shortcuts-keys"><kbd>Esc</kbd></span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

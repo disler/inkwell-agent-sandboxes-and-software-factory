@@ -1,0 +1,161 @@
+# ─── Python ───────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+# Root-anchored: these are Python build dirs, but `lib/` unanchored also swallows
+# app source like apps/*/src/lib. Virtualenv lib/ is covered by .venv/ below.
+/lib/
+/lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Testing / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
+
+# Type checking / linting
+.mypy_cache/
+.ruff_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Python tools
+.pdm-build/
+.pdm.toml
+__pypackages__/
+celerybeat-schedule
+*.sage.py
+pip-wheel-metadata/
+poetry.lock.meta
+
+# ─── Bun / Node ───────────────────────────────────────────
+node_modules/
+bun.lockb.tmp
+.pnp
+.pnp.js
+.yarn/install-state.gz
+.npm/
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+
+# Package manager debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+bun-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ─── Vite / Vue ───────────────────────────────────────────
+# Build output
+dist/
+dist-ssr/
+*.local
+
+# Vite cache
+.vite/
+node_modules/.vite/
+
+# Vue / Volar
+*.vue.js
+
+# Coverage (vitest / cypress)
+coverage/
+*.lcov
+.nyc_output/
+
+# Test artifacts
+/test-results/
+/playwright-report/
+/playwright/.cache/
+.playwright-cli/
+cypress/videos/
+cypress/screenshots/
+
+# ─── Env / secrets ────────────────────────────────────────
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+
+# ─── Editors / OS ─────────────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*~
+
+# ─── Misc ─────────────────────────────────────────────────
+prototypes/
+*.log
+logs/
+tmp/
+temp/
+.cache/
+.parcel-cache/
+.turbo/
+.vercel/
+.netlify/
+*.tsbuildinfo
+
+# sssf runtime
+adws/adw_data/sessions/
+# Unanchored: a trace db is never committed, wherever it turns up. Two empty
+# ones had been tracked — adws/sssf.db and templates/adws/sssf.db, the second
+# of which would have stamped a fake trace db into every target repo.
+sssf.db*
+
+# inkwell
+apps/inkwell/inkwell.db*
+
+*.mov
+
+# sandbox mount: per-run records hold live OpenRouter key hashes
+.sandbox/

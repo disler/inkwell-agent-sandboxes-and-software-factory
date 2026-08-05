@@ -1,0 +1,29 @@
+[project]
+name = "exedev-cli"
+version = "0.1.0"
+description = "exe.dev CLI — control persistent VMs from the command line, mirroring /agent-sandboxes for E2B"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "click>=8.1.7",
+    "rich>=13.7.0",
+]
+
+[project.scripts]
+exedev = "src.main:cli"
+
+[tool.uv]
+package = true
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    # Used by `exedev browser` (verbatim copy from /agent-sandboxes; local Playwright + CDP).
+    "playwright>=1.56.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]

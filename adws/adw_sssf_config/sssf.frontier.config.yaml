@@ -1,0 +1,132 @@
+# sssf.frontier.config.yaml — the same factory, staffed with frontier models.
+# Known as: the frontier roster, the sota roster, the big models. Same file.
+#
+# Nothing here but the roster changes. Same ADW scripts, same prompts, same
+# gates, same trace: swapping this file in is the whole migration.
+#
+#   uv run adws/adw_plan_build_test.py "<request>" \
+#     --config adws/adw_sssf_config/sssf.frontier.config.yaml
+#
+# Roles are cast to each model's strength: Opus 5 plans, Kimi K3 builds,
+# GPT-5.6 Sol scouts. Thinking is high across the roster — this config trades
+# tokens for judgement, which is the point of running it at all.
+defaults:
+  coding_agent: pi
+  model: openrouter/anthropic/claude-opus-5   # provider/id — provider half is the pi provider name
+  thinking: high                   # off | minimal | low | medium | high | xhigh | max
+  harness_engineering: []
+  # Roster-wide allowlist; any agent may override with its own list.
+  # NOTE: --tools filters extension and custom tools too, not just builtins. An agent
+  # whose harness_engineering extension registers a tool MUST name that tool in its own
+  # tools list — otherwise the extension loads and its tool is silently filtered out.
+  tools:
+    - read                         # read file contents
+    - bash                         # execute bash commands
+    - edit                         # find/replace edits
+    - write                        # create/overwrite files
+    - grep                         # search file contents  (pi default: OFF)
+    - find                         # find files by glob     (pi default: OFF)
+    - ls                           # list directories       (pi default: OFF)
+  data_dir: adws/adw_data          # runtime home: {data_dir}/sessions/{adw_id}/{agent_name}/
+
+observability:
+  db: adws/adw_data/sssf.db        # same db as the default roster — runs sit side by side
+  poll_ms: 500                     # visualizer live-poll cadence
+
+agents:
+  - name: planner
+    model: openrouter/anthropic/claude-opus-5   # 1M context; the plan is the highest-leverage artifact
+    thinking: high
+    color: "#a78bfa"
+    purpose: Turn a request into a plan the builder can implement without asking questions.
+    prompt_engineering:
+      system: adws/adw_data/prompt_engineering/planner/system.md
+      user: adws/adw_data/prompt_engineering/planner/user.md
+    harness_engineering:
+      - adws/adw_data/harness_engineering/subagents.ts    # registers the four subagent_* tools below
+    tools:                         # full recon + write for plan.md; no edit — the planner never touches repo files
+      - read
+      - grep
+      - find
+      - ls
+      - bash
+      - write
+      - subagent_create            # extension tools MUST be named here or they are filtered out
+      - subagent_continue
+      - subagent_list
+      - subagent_remove
+
+  - name: builder
+    model: openrouter/moonshotai/kimi-k3   # 1M context, strong tool-use; the only agent that writes code
+    thinking: high
+    color: "#22d3ee"
+    purpose: Implement the plan exactly; report every changed file in the envelope.
+    prompt_engineering:
+      system: adws/adw_data/prompt_engineering/builder/system.md
+      user: adws/adw_data/prompt_engineering/builder/user.md
+    tools:                         # the only agent that mutates the repo — everything on
+      - read
+      - grep
+      - find
+      - ls
+      - bash
+      - edit
+      - write
+
+  - name: scout
+    model: openrouter/openai/gpt-5.6-sol
+    thinking: high
+    color: "#fbbf24"
+    purpose: Find and report where things live; change nothing.
+    prompt_engineering:
+      system: adws/adw_data/prompt_engineering/scout/system.md
+      user: adws/adw_data/prompt_engineering/scout/user.md
+    harness_engineering:
+      - adws/adw_data/harness_engineering/subagents.ts    # registers the four subagent_* tools below
+    tools:                         # search-heavy recon; write only so scout_findings.md lands without a bash heredoc
+      - read
+      - grep
+      - find
+      - ls
+      - bash
+      - write
+      - subagent_create            # extension tools MUST be named here or they are filtered out
+      - subagent_continue
+      - subagent_list
+      - subagent_remove
+
+  # No tester agent: running the suite is a known command, so it is a kind="code"
+  # phase over adw_modules/quality.py. See SKILL.md hard rule 8.
+
+  - name: reviewer
+    model: openrouter/anthropic/claude-opus-5   # judgement against a spec — the same strength that earns it the plan
+    thinking: high
+    color: "#fb7185"
+    purpose: Confirm that what was built is what was asked for; change nothing.
+    prompt_engineering:
+      system: adws/adw_data/prompt_engineering/reviewer/system.md
+      user: adws/adw_data/prompt_engineering/reviewer/user.md
+    tools:                         # full read surface; write only for review.md, no edit — a reviewer that cannot fix cannot quietly fix
+      - read
+      - grep
+      - find
+      - ls
+      - bash
+      - write
+
+  - name: documenter
+    model: openrouter/moonshotai/kimi-k3   # a long diff read end to end, then written up once
+    thinking: high
+    color: "#e879f9"
+    purpose: Write up the change that was just made, from the diff; document only.
+    prompt_engineering:
+      system: adws/adw_data/prompt_engineering/documenter/system.md
+      user: adws/adw_data/prompt_engineering/documenter/user.md
+    tools:                         # reads the diff and the code; writes/edits documentation only (prompted, since docs are files too)
+      - read
+      - grep
+      - find
+      - ls
+      - bash
+      - write
+      - edit

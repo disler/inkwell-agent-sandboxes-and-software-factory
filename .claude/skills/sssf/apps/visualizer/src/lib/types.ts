@@ -1,0 +1,26 @@
+// Single switch point onto the server's contract: everything UI-side imports
+// table shapes from here, which re-exports shared/types.ts.
+export type {
+  Session,
+  SessionSummary,
+  SessionUsage,
+  SessionDetail,
+  Phase,
+  Event as EventRow,
+  EventsPage,
+  Envelope,
+  GateResult,
+  GateCheck,
+  AgentSession,
+  AgentStartPayload,
+  AgentEndPayload,
+  UsageBreakdown,
+  ToolCallPayload,
+  AgentPrompts,
+  PromptsResponse,
+  HealthResponse,
+  SessionStatus,
+  PhaseStatus,
+  PhaseKind,
+  EventType,
+} from '@shared/types'

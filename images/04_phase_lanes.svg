@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 560" width="1120" height="560" font-family="Inter, system-ui, sans-serif">
+  <defs>
+    <filter id="ts4" x="-50%" y="-50%" width="200%" height="200%">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="0.6" result="thick"/>
+      <feGaussianBlur in="thick" stdDeviation="2.2" result="blur"/>
+      <feFlood flood-color="#000000" flood-opacity="0.95" result="flood"/>
+      <feComposite in="flood" in2="blur" operator="in" result="shadow"/>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <style><![CDATA[
+      .title { font-weight: 700; font-size: 30px; fill: #FFFFFF; letter-spacing: -0.5px; }
+      .mono  { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+      .lane  { font-size: 14px; fill: #FFFFFF; }
+      .lanem { font-size: 11px; fill: #94A3B8; }
+      .blkl  { font-size: 13px; fill: #FFFFFF; }
+      .tick  { font-size: 11px; fill: #64748B; }
+      .foot  { font-size: 14px; fill: #CBD5E1; }
+      .kind  { font-size: 12px; }
+
+      .lb { opacity: 0; animation: f 0.4s ease forwards; }
+      .l1{animation-delay:.15s} .l2{animation-delay:.3s} .l3{animation-delay:.45s} .l4{animation-delay:.6s} .l5{animation-delay:.75s}
+      .pb { opacity: 0; transform: scaleX(.2); transform-box: fill-box; transform-origin: left center; animation: grow 0.5s cubic-bezier(.2,.8,.3,1) forwards; }
+      .p1{animation-delay:.85s} .p2{animation-delay:1.05s} .p3{animation-delay:1.3s} .p4{animation-delay:1.5s} .p5{animation-delay:1.75s}
+      .txf { opacity: 0; animation: f 0.35s ease forwards; }
+      .x1{animation-delay:1.15s} .x2{animation-delay:1.35s} .x3{animation-delay:1.6s} .x4{animation-delay:1.8s} .x5{animation-delay:2.05s}
+      .qd { opacity: 0; animation: f 0.5s ease 2.15s forwards; }
+      .ft { opacity: 0; animation: f 0.5s ease 2.4s forwards; }
+      .run { animation: rp 1.8s ease-in-out 2s infinite; }
+
+      @keyframes f { to { opacity: 1; } }
+      @keyframes grow { to { opacity: 1; transform: scaleX(1); } }
+      @keyframes rp { 0%,100%{ filter: drop-shadow(0 0 2px rgba(56,189,248,.2)); } 50%{ filter: drop-shadow(0 0 8px rgba(56,189,248,.65)); } }
+    
+      @media (prefers-reduced-motion: reduce) {
+        * { opacity: 1 !important; animation: none !important; transform: none !important; stroke-dashoffset: 0 !important; }
+      }
+    ]]></style>
+  </defs>
+
+  <text filter="url(#ts4)" class="title" x="560" y="46" text-anchor="middle">Three lanes. One primitive.</text>
+
+  <!-- time axis -->
+  <line x1="270" y1="96" x2="1080" y2="96" stroke="#334155" stroke-width="1"/>
+  <text filter="url(#ts4)" class="tick mono" x="270" y="86">0:00</text>
+  <text filter="url(#ts4)" class="tick mono" x="432" y="86">0:30</text>
+  <text filter="url(#ts4)" class="tick mono" x="594" y="86">1:00</text>
+  <text filter="url(#ts4)" class="tick mono" x="756" y="86">1:30</text>
+  <text filter="url(#ts4)" class="tick mono" x="918" y="86">2:00</text>
+  <text filter="url(#ts4)" class="tick mono" x="1050" y="86">2:30</text>
+
+  <!-- lane labels -->
+  <g class="lb l1">
+    <text filter="url(#ts4)" class="lane mono" x="40" y="140">engineer &#183; dan</text>
+    <text filter="url(#ts4)" class="kind mono" x="40" y="158" fill="#A78BFA">engineer</text>
+  </g>
+  <g class="lb l2">
+    <text filter="url(#ts4)" class="lane mono" x="40" y="212">git</text>
+    <text filter="url(#ts4)" class="kind mono" x="40" y="230" fill="#34D399">code</text>
+  </g>
+  <g class="lb l3">
+    <text filter="url(#ts4)" class="lane mono" x="40" y="284">planner</text>
+    <text filter="url(#ts4)" class="kind mono" x="40" y="302" fill="#38BDF8">agent &#183; thinking high</text>
+  </g>
+  <g class="lb l4">
+    <text filter="url(#ts4)" class="lane mono" x="40" y="356">builder</text>
+    <text filter="url(#ts4)" class="kind mono" x="40" y="374" fill="#38BDF8">agent &#183; gemini-3.6-flash</text>
+  </g>
+  <g class="lb l5">
+    <text filter="url(#ts4)" class="lane mono" x="40" y="428">tester</text>
+    <text filter="url(#ts4)" class="kind mono" x="40" y="446" fill="#38BDF8">agent &#183; thinking low</text>
+  </g>
+
+  <!-- lane rules -->
+  <g stroke="#1E293B" stroke-width="1">
+    <line x1="270" y1="170" x2="1080" y2="170"/>
+    <line x1="270" y1="242" x2="1080" y2="242"/>
+    <line x1="270" y1="314" x2="1080" y2="314"/>
+    <line x1="270" y1="386" x2="1080" y2="386"/>
+    <line x1="270" y1="458" x2="1080" y2="458"/>
+  </g>
+
+  <!-- phase blocks -->
+  <g class="pb p1"><rect x="272" y="118" width="86" height="44" rx="8" fill="#0F172A" stroke="#A78BFA" stroke-width="2"/></g>
+  <g class="txf x1"><text filter="url(#ts4)" class="blkl mono" x="315" y="146" text-anchor="middle">request</text></g>
+
+  <g class="pb p2"><rect x="272" y="262" width="270" height="44" rx="8" fill="#0F172A" stroke="#38BDF8" stroke-width="2"/></g>
+  <g class="txf x2"><text filter="url(#ts4)" class="blkl mono" x="407" y="290" text-anchor="middle">plan &#10003; envelope &#183; gates 2/2</text></g>
+
+  <g class="pb p4"><rect x="556" y="334" width="330" height="44" rx="8" fill="#0F172A" stroke="#38BDF8" stroke-width="2"/></g>
+  <g class="txf x4"><text filter="url(#ts4)" class="blkl mono" x="721" y="362" text-anchor="middle">build &#10003; attempt 2/2</text></g>
+
+  <g class="pb p5"><rect x="900" y="406" width="150" height="44" rx="8" fill="#0F172A" stroke="#38BDF8" stroke-width="2"/></g>
+  <g class="txf x5 run"><text filter="url(#ts4)" class="blkl mono" x="975" y="434" text-anchor="middle">test_1 running</text></g>
+
+  <!-- queued block -->
+  <g class="qd">
+    <rect x="900" y="190" width="150" height="44" rx="8" fill="none" stroke="#64748B" stroke-width="1.6" stroke-dasharray="6 5"/>
+    <text filter="url(#ts4)" class="blkl mono" x="975" y="218" text-anchor="middle" fill="#94A3B8">commit queued</text>
+  </g>
+
+  <g class="ft">
+    <text filter="url(#ts4)" class="foot" x="40" y="506">Every phase is one <tspan class="mono" fill="#FFFFFF">with run.phase(PhaseParams(...))</tspan> block. Engineer, code, and agent phases use the exact same primitive.</text>
+    <text filter="url(#ts4)" class="foot" x="40" y="534">Status defaults to <tspan class="mono" fill="#FCA5A5">fail</tspan>. A clean exit earns <tspan class="mono" fill="#6EE7B7">success</tspan> &#8212; agent phases also need the envelope to parse and every gate green.</text>
+  </g>
+</svg>

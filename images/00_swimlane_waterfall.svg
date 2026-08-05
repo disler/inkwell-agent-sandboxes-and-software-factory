@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675" font-family="Inter, system-ui, sans-serif">
+  <title>A run as swim lanes: engineer, code, planner, builder, and reviewer phases laid on a time axis, each block showing its duration, with one phase still running and the next still queued</title>
+  <defs>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <style><![CDATA[
+      .ttl   { opacity: 0; animation: f .5s ease .10s forwards; }
+      .axis  { opacity: 0; animation: f .5s ease .35s forwards; }
+      .grid  { opacity: 0; animation: fg .6s ease .45s forwards; }
+      .lane  { opacity: 0; transform: translateX(-8px); animation: slide .4s cubic-bezier(.2,.8,.3,1) forwards; }
+
+      /* A bar grows left-to-right, because its WIDTH is the point — this is a
+         duration, not a decoration. The label fades in after its bar lands. */
+      .bar   { transform: scaleX(0); transform-box: fill-box; transform-origin: left center;
+               animation: grow .45s cubic-bezier(.2,.8,.3,1) forwards; }
+      .lab   { opacity: 0; animation: f .3s ease forwards; }
+
+      .l1 { animation-delay: .55s } .l2 { animation-delay: .65s } .l3 { animation-delay: .75s }
+      .l4 { animation-delay: .85s } .l5 { animation-delay: .95s }
+
+      .b1 { animation-delay: 1.15s } .b2 { animation-delay: 1.50s } .b3 { animation-delay: 1.85s }
+      .b4 { animation-delay: 2.20s } .b5 { animation-delay: 2.55s } .b6 { animation-delay: 2.90s }
+      .t1 { animation-delay: 1.45s } .t2 { animation-delay: 1.80s } .t3 { animation-delay: 2.15s }
+      .t4 { animation-delay: 2.50s } .t5 { animation-delay: 2.85s } .t6 { animation-delay: 3.20s }
+
+      .run   { animation: gl 2.4s ease-in-out 3.2s infinite; }
+      .legend{ opacity: 0; animation: f .5s ease 3.30s forwards; }
+
+      @keyframes f     { to { opacity: 1 } }
+      @keyframes fg    { to { opacity: .9 } }
+      @keyframes slide { to { opacity: 1; transform: translateX(0) } }
+      @keyframes grow  { to { transform: scaleX(1) } }
+      @keyframes gl    { 0%,100% { filter: drop-shadow(0 0 2px rgba(34,211,238,.30)) }
+                         50%     { filter: drop-shadow(0 0 10px rgba(34,211,238,.75)) } }
+
+      @media (prefers-reduced-motion: reduce) {
+        * { opacity: 1 !important; animation: none !important; transform: none !important; }
+        .grid { opacity: .9 !important; }
+      }
+    ]]></style>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="675" rx="14" fill="#0B0F14" stroke="#1B2431" stroke-width="1"/>
+
+  <text class="ttl" x="56" y="70" font-size="25" font-weight="700" fill="#E6E9EF">Super Simple Software Factory</text>
+
+  <!-- legend: the three states a phase can be read in -->
+  <g class="legend" font-size="15" fill="#9AA4B2">
+    <rect x="790" y="56" width="13" height="13" rx="3" fill="none" stroke="#6B7684" stroke-width="1.4" stroke-dasharray="3 2"/>
+    <text x="812" y="67">queued</text>
+    <text x="874" y="67" fill="#55606F">&#8594;</text>
+    <rect x="896" y="56" width="13" height="13" rx="3" fill="#22D3EE"/>
+    <text x="918" y="67">running</text>
+    <text x="984" y="67" fill="#55606F">&#8594;</text>
+    <rect x="1006" y="56" width="13" height="13" rx="3" fill="#8B93A1"/>
+    <text x="1028" y="67">success</text>
+  </g>
+
+  <!-- time axis -->
+  <g class="axis" font-size="15" fill="#7C8798" text-anchor="middle">
+    <text x="250" y="133">0s</text>
+    <text x="465" y="133">10s</text>
+    <text x="680" y="133">20s</text>
+    <text x="895" y="133">30s</text>
+    <text x="1110" y="133">40s</text>
+  </g>
+  <line class="axis" x1="250" y1="152" x2="1110" y2="152" stroke="#2A3444" stroke-width="1.2"/>
+
+  <g class="grid" stroke="#161E29" stroke-width="1">
+    <line x1="250" y1="152" x2="250" y2="622"/>
+    <line x1="465" y1="152" x2="465" y2="622"/>
+    <line x1="680" y1="152" x2="680" y2="622"/>
+    <line x1="895" y1="152" x2="895" y2="622"/>
+    <line x1="1110" y1="152" x2="1110" y2="622"/>
+    <line x1="250" y1="282" x2="1110" y2="282"/>
+    <line x1="250" y1="370" x2="1110" y2="370"/>
+    <line x1="250" y1="458" x2="1110" y2="458"/>
+    <line x1="250" y1="546" x2="1110" y2="546"/>
+  </g>
+
+  <!-- lane labels: the swatch is the agent's colour from sssf.config.yaml -->
+  <g font-size="17" fill="#CFD6E0">
+    <g class="lane l1"><rect x="62" y="232" width="13" height="13" rx="3" fill="#8B93A1"/><text x="88" y="244">engineer</text></g>
+    <g class="lane l2"><rect x="62" y="320" width="13" height="13" rx="3" fill="#8B93A1"/><text x="88" y="332">code</text></g>
+    <g class="lane l3"><rect x="62" y="408" width="13" height="13" rx="3" fill="#A78BFA"/><text x="88" y="420">planner</text></g>
+    <g class="lane l4"><rect x="62" y="496" width="13" height="13" rx="3" fill="#4795C4"/><text x="88" y="508">builder</text></g>
+    <g class="lane l5"><rect x="62" y="584" width="13" height="13" rx="3" fill="#2DD4BF"/><text x="88" y="596">reviewer</text></g>
+  </g>
+
+  <!-- request · engineer · 5.2s -->
+  <rect class="bar b1" x="250" y="216" width="112" height="44" rx="6" fill="#B9C1CC"/>
+  <g class="lab t1" font-size="16">
+    <text x="252" y="206" font-size="14" fill="#9AA4B2">5.2s</text>
+    <text x="306" y="244" fill="#0E1620" text-anchor="middle">request</text>
+  </g>
+
+  <!-- branch · code · 4.8s -->
+  <rect class="bar b2" x="366" y="304" width="103" height="44" rx="6" fill="#6F7885"/>
+  <g class="lab t2" font-size="16">
+    <text x="368" y="294" font-size="14" fill="#9AA4B2">4.8s</text>
+    <text x="417" y="332" fill="#E8ECF2" text-anchor="middle">branch</text>
+  </g>
+
+  <!-- plan · planner · 9.2s -->
+  <rect class="bar b3" x="452" y="392" width="198" height="44" rx="6" fill="#8B5CF6"/>
+  <g class="lab t3" font-size="16">
+    <text x="454" y="382" font-size="14" fill="#9AA4B2">9.2s</text>
+    <text x="551" y="420" fill="#FFFFFF" text-anchor="middle">plan</text>
+  </g>
+
+  <!-- build · builder · 12.4s -->
+  <rect class="bar b4" x="633" y="480" width="267" height="44" rx="6" fill="#4795C4"/>
+  <g class="lab t4" font-size="16">
+    <text x="635" y="470" font-size="14" fill="#9AA4B2">12.4s</text>
+    <text x="766" y="508" fill="#FFFFFF" text-anchor="middle">build</text>
+  </g>
+
+  <!-- review · reviewer · 6.8s — still RUNNING, so it carries the pulse -->
+  <g class="run">
+    <rect class="bar b5" x="878" y="568" width="146" height="44" rx="6" fill="#0F8B93" stroke="#22D3EE" stroke-width="2"/>
+  </g>
+  <g class="lab t5" font-size="16">
+    <text x="880" y="558" font-size="14" fill="#9AA4B2">6.8s</text>
+    <text x="951" y="596" fill="#FFFFFF" text-anchor="middle">review</text>
+  </g>
+
+  <!-- commit · code · 4.8s — QUEUED: outlined, unfilled, nothing has run yet -->
+  <rect class="bar b6" x="1003" y="304" width="103" height="44" rx="6" fill="none" stroke="#55606F" stroke-width="1.4" stroke-dasharray="4 3"/>
+  <g class="lab t6" font-size="16">
+    <text x="1005" y="294" font-size="14" fill="#9AA4B2">4.8s</text>
+    <text x="1054" y="332" fill="#9AA4B2" text-anchor="middle">commit</text>
+  </g>
+</svg>

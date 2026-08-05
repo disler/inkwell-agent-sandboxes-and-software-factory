@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 560" width="1120" height="560" font-family="Inter, system-ui, sans-serif">
+  <defs>
+    <filter id="ts6" x="-50%" y="-50%" width="200%" height="200%">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="0.6" result="thick"/>
+      <feGaussianBlur in="thick" stdDeviation="2.2" result="blur"/>
+      <feFlood flood-color="#000000" flood-opacity="0.95" result="flood"/>
+      <feComposite in="flood" in2="blur" operator="in" result="shadow"/>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="aw6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#E2E8F0"/>
+    </marker>
+    <style><![CDATA[
+      .title { font-weight: 700; font-size: 30px; fill: #FFFFFF; letter-spacing: -0.5px; }
+      .mono  { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+      .nd    { font-size: 16px; fill: #FFFFFF; }
+      .sm    { font-size: 12px; fill: #94A3B8; }
+      .tb    { font-size: 12px; fill: #E2E8F0; }
+      .no    { font-size: 14px; fill: #FCA5A5; }
+      .foot  { font-size: 14px; fill: #CBD5E1; }
+      .ev    { font-size: 11px; fill: #CBD5E1; }
+
+      .n { opacity: 0; transform: translateY(8px); animation: rise 0.45s cubic-bezier(.2,.8,.3,1) forwards; }
+      .n1{animation-delay:.15s} .n2{animation-delay:.5s} .n3{animation-delay:.85s} .n4{animation-delay:1.2s}
+      .e { opacity: 0; stroke-dasharray: 200; stroke-dashoffset: 200; animation: dr 0.5s ease forwards; }
+      .e1{animation-delay:.4s} .e2{animation-delay:.75s} .e3{animation-delay:1.1s}
+      .tick { opacity: 0; animation: blink 1.6s ease-in-out 1.5s infinite; }
+      .neg { opacity: 0; animation: f 0.5s ease 1.7s forwards; }
+      .ft { opacity: 0; animation: f 0.5s ease 1.95s forwards; }
+      .pk { animation: pk 2s ease-in-out 1.6s infinite; }
+
+      @keyframes f { to { opacity: 1; } }
+      @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+      @keyframes dr { 0%{opacity:0} 100% { opacity: 1; stroke-dashoffset: 0; } }
+      @keyframes blink { 0%,100%{opacity:.25} 50%{opacity:1} }
+      @keyframes pk { 0%,100%{ filter: drop-shadow(0 0 2px rgba(56,189,248,.2)); } 50%{ filter: drop-shadow(0 0 9px rgba(56,189,248,.6)); } }
+    
+      @media (prefers-reduced-motion: reduce) {
+        * { opacity: 1 !important; animation: none !important; transform: none !important; stroke-dashoffset: 0 !important; }
+      }
+    ]]></style>
+  </defs>
+
+  <text filter="url(#ts6)" class="title" x="560" y="46" text-anchor="middle">agents &#8594; sqlite &#8594; you</text>
+
+  <!-- agents -->
+  <g class="n n1">
+    <rect x="40" y="110" width="200" height="180" rx="12" fill="#0F172A" stroke="#38BDF8" stroke-width="2.2"/>
+    <text filter="url(#ts6)" class="nd mono" x="140" y="142" text-anchor="middle">running agents</text>
+    <text filter="url(#ts6)" class="ev mono" x="60" y="172">tool_call  Read server.ts</text>
+    <text filter="url(#ts6)" class="ev mono" x="60" y="196">tool_call  Edit server.ts</text>
+    <text filter="url(#ts6)" class="ev mono" x="60" y="220">gate_fail  diff_matches</text>
+    <text filter="url(#ts6)" class="ev mono" x="60" y="244">handoff    envelope</text>
+    <text filter="url(#ts6)" class="ev mono" x="60" y="268">agent_end  builder</text>
+  </g>
+
+  <!-- tracer -->
+  <line class="e e1" x1="242" y1="200" x2="324" y2="200" stroke="#E2E8F0" stroke-width="2" marker-end="url(#aw6)"/>
+  <g class="n n2">
+    <rect x="328" y="150" width="170" height="100" rx="12" fill="#0F172A" stroke="#E2E8F0" stroke-width="1.8"/>
+    <text filter="url(#ts6)" class="nd mono" x="413" y="186" text-anchor="middle">tracer.py</text>
+    <text filter="url(#ts6)" class="sm mono" x="413" y="210" text-anchor="middle">tails stdout,</text>
+    <text filter="url(#ts6)" class="sm mono" x="413" y="228" text-anchor="middle">inserts mid-run</text>
+  </g>
+
+  <!-- db -->
+  <line class="e e2" x1="500" y1="200" x2="582" y2="200" stroke="#E2E8F0" stroke-width="2" marker-end="url(#aw6)"/>
+  <g class="n n3">
+    <g class="pk">
+      <rect x="586" y="110" width="248" height="180" rx="12" fill="#0F172A" stroke="#38BDF8" stroke-width="2.2"/>
+    </g>
+    <text filter="url(#ts6)" class="nd mono" x="710" y="140" text-anchor="middle">sssf.db</text>
+    <text filter="url(#ts6)" class="sm mono" x="710" y="160" text-anchor="middle">WAL &#183; readers never blocked</text>
+    <text filter="url(#ts6)" class="tb mono" x="606" y="190">sessions</text>
+    <text filter="url(#ts6)" class="tb mono" x="606" y="212">phases</text>
+    <text filter="url(#ts6)" class="tb mono" x="606" y="234">events</text>
+    <text filter="url(#ts6)" class="tb mono" x="730" y="190">envelopes</text>
+    <text filter="url(#ts6)" class="tb mono" x="730" y="212">gate_results</text>
+    <text filter="url(#ts6)" class="tb mono" x="730" y="234">agent_sessions</text>
+    <text filter="url(#ts6)" class="sm mono" x="710" y="270" text-anchor="middle">files stay the raw record</text>
+  </g>
+
+  <!-- readers -->
+  <line class="e e3" x1="836" y1="200" x2="918" y2="200" stroke="#E2E8F0" stroke-width="2" marker-end="url(#aw6)"/>
+  <text filter="url(#ts6)" class="sm mono tick" x="877" y="188" text-anchor="middle">poll</text>
+  <g class="n n4">
+    <rect x="922" y="150" width="158" height="100" rx="12" fill="#0F172A" stroke="#E2E8F0" stroke-width="1.8"/>
+    <text filter="url(#ts6)" class="nd mono" x="1001" y="186" text-anchor="middle">read-only</text>
+    <text filter="url(#ts6)" class="sm mono" x="1001" y="210" text-anchor="middle">sqlite3, just tail,</text>
+    <text filter="url(#ts6)" class="sm mono" x="1001" y="228" text-anchor="middle">the visualizer</text>
+  </g>
+
+  <!-- polling query -->
+  <g class="neg">
+    <rect x="328" y="330" width="600" height="46" rx="9" fill="#0F172A" stroke="#334155" stroke-width="1.4"/>
+    <text filter="url(#ts6)" class="tb mono" x="628" y="359" text-anchor="middle">select * from events where adw_id=? and rowid &gt; ? order by rowid limit 500</text>
+    <text filter="url(#ts6)" class="sm mono" x="628" y="398" text-anchor="middle">one cursor query serves the live tail and the whole history</text>
+  </g>
+
+  <!-- negations -->
+  <g class="neg">
+    <text filter="url(#ts6)" class="no mono" x="80" y="452">&#10007;  no websocket</text>
+    <text filter="url(#ts6)" class="no mono" x="330" y="452">&#10007;  no ingest endpoint</text>
+    <text filter="url(#ts6)" class="no mono" x="620" y="452">&#10007;  no backfill or dedup</text>
+    <text filter="url(#ts6)" class="no mono" x="900" y="452">&#10007;  no replay path</text>
+  </g>
+
+  <g class="ft">
+    <text filter="url(#ts6)" class="foot" x="560" y="508" text-anchor="middle">Events land in the db while the agent is still typing. Everything downstream is a poll and a render.</text>
+  </g>
+</svg>
